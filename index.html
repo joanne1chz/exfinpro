@@ -14,24 +14,23 @@
         body {
             /* Warna background dasar sesuai permintaanmu */
             background-color: #57BCB6; 
-            /* Mengizinkan halaman untuk di-scroll ke bawah */
             overflow-y: auto; 
             overflow-x: hidden;
         }
 
         .landing-container {
             width: 100vw;
-            /* Tinggi diatur auto/min-height agar memanjang ke bawah mengikuti aspek rasio gambar */
-            min-height: 200vh; 
+            /* Kita paksa tingginya menjadi 180% dari lebar layar agar pas dengan rasio gambar yang panjang */
+            height: 180vw; 
             
             /* Memasukkan aset gambar */
             background-image: url('https://github.com/joanne1chz/exfinpro/blob/main/Bg.png?raw=true');
             background-repeat: no-repeat;
             
-            /* Posisi dimulai dari atas dan pas di tengah secara horizontal */
+            /* Posisi dimulai dari paling atas */
             background-position: top center; 
             
-            /* KUNCI: Gambar akan memenuhi lebar laptop, dan tingginya otomatis memanjang ke bawah */
+            /* Gambar diatur agar selalu selebar layar (100%) dan memanjang ke bawah otomatis */
             background-size: 100% auto; 
         }
     </style>
