@@ -27,7 +27,7 @@
             position: relative; 
         }
 
-        /* --- STYLING MAIN MENU (Kanan Atas) --- */
+        /* --- MAIN MENU (Kanan Atas) --- */
         .main-menu {
             position: absolute;
             top: 6vw;
@@ -37,15 +37,15 @@
             z-index: 10;
         }
 
-        /* --- STYLING FIREBASE MENU (Kiri Bawah, Muncul Pas Di-scroll) --- */
+        /* --- FIREBASE MENU (Pojok Kiri, Diperkecil & Diberi Space) --- */
         .firebase-menu {
             position: absolute;
-            /* Diletakkan lebih bawah (di bawah arcade burung) */
-            top: 62vw; 
-            /* Di sebelah kiri sesuai kotak merah referensi */
+            /* Diturunkan dari 62vw ke 68vw agar tidak menabrak arcade di atasnya */
+            top: 68vw; 
+            /* Tetap konsisten di pojok kiri */
             left: 6vw; 
-            /* Ukuran disesuaikan agar proporsional di layar laptop */
-            width: 44vw; 
+            /* Ukuran dikecilkan sedikit dari 44vw ke 38vw agar proporsinya pas */
+            width: 38vw; 
             height: auto;
             z-index: 10;
         }
