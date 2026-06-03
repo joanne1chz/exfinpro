@@ -24,17 +24,28 @@
             background-repeat: no-repeat;
             background-position: top center; 
             background-size: 100% auto; 
-            position: relative; /* Menjadi acuan untuk posisi main menu */
+            position: relative; 
         }
 
-        /* --- STYLING MAIN MENU ASSET --- */
+        /* --- STYLING MAIN MENU (Kanan Atas) --- */
         .main-menu {
             position: absolute;
-            /* Mengatur posisi di sebelah kanan karakter burung */
             top: 6vw;
             right: 5vw;
-            /* Mengatur ukuran proporsional terhadap lebar layar laptop */
             width: 52vw;
+            height: auto;
+            z-index: 10;
+        }
+
+        /* --- STYLING FIREBASE MENU (Kiri Bawah, Muncul Pas Di-scroll) --- */
+        .firebase-menu {
+            position: absolute;
+            /* Diletakkan lebih bawah (di bawah arcade burung) */
+            top: 62vw; 
+            /* Di sebelah kiri sesuai kotak merah referensi */
+            left: 6vw; 
+            /* Ukuran disesuaikan agar proporsional di layar laptop */
+            width: 44vw; 
             height: auto;
             z-index: 10;
         }
@@ -44,6 +55,8 @@
 
     <div class="landing-container">
         <img src="https://github.com/joanne1chz/exfinpro/blob/main/Main.png?raw=true" alt="Main Menu" class="main-menu">
+
+        <img src="https://github.com/joanne1chz/exfinpro/blob/main/firebase.png?raw=true" alt="Firebase Menu" class="firebase-menu">
     </div>
 
 </body>
