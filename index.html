@@ -19,20 +19,32 @@
 
         .landing-container {
             width: 100vw;
-            /* Dipotong ke 148vw agar pas mentok di tengah bidang pink tanpa sisa biru di bawah */
             height: 148vw; 
-            
             background-image: url('https://github.com/joanne1chz/exfinpro/blob/main/Bg.png?raw=true');
             background-repeat: no-repeat;
             background-position: top center; 
             background-size: 100% auto; 
+            position: relative; /* Menjadi acuan untuk posisi main menu */
+        }
+
+        /* --- STYLING MAIN MENU ASSET --- */
+        .main-menu {
+            position: absolute;
+            /* Mengatur posisi di sebelah kanan karakter burung */
+            top: 6vw;
+            right: 5vw;
+            /* Mengatur ukuran proporsional terhadap lebar layar laptop */
+            width: 52vw;
+            height: auto;
+            z-index: 10;
         }
     </style>
 </head>
 <body>
 
     <div class="landing-container">
-        </div>
+        <img src="https://github.com/joanne1chz/exfinpro/blob/main/Main.png?raw=true" alt="Main Menu" class="main-menu">
+    </div>
 
 </body>
 </html>
