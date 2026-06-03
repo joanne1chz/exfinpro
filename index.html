@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Landing Page - Ticktock Golden</title>
     <style>
+        /* Impor font Mobitale Cnd (atau font sans-serif tebal sebagai fallback jika lokal) */
+        @font-face {
+            font-family: 'Mobitale Cnd';
+            src: local('Mobitale Cnd'), local('Mobitale-Cnd');
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -27,8 +33,8 @@
             position: relative; 
         }
 
-        /* --- MAIN MENU (Kanan Atas) --- */
-        .main-menu {
+        /* --- WRAPPER MAIN MENU --- */
+        .main-menu-wrapper {
             position: absolute;
             top: 6vw;
             right: 5vw;
@@ -37,7 +43,46 @@
             z-index: 10;
         }
 
-        /* --- FIREBASE MENU (Pojok Kiri Tengah) --- */
+        .main-menu-img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* --- TEKS STATUS KIPAS (Di Atas Kotak Biru Muda) --- */
+        .status-kipas {
+            position: absolute;
+            /* Koordinat agar pas di tengah kotak biru muda pada Main.png */
+            top: 36%; 
+            left: 71%;
+            transform: translate(-50%, -50%);
+            
+            /* Font & Ukuran proporsional */
+            font-family: 'Mobitale Cnd', 'Arial Black', sans-serif;
+            font-size: 4.5vw; 
+            font-weight: bold;
+            text-transform: uppercase;
+            white-space: nowrap;
+
+            /* Efek Gradasi Teks (Atas: #75D6FF ke Bawah: #0783B7) */
+            background: linear-gradient(to bottom, #75D6FF, #0783B7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+
+            /* Efek Stroke Putih di Luar + Drop Shadow Tegas #0269B9 (Tanpa Blur) */
+            filter: 
+                drop-shadow(0px 4px 0px #0269B9)
+                drop-shadow(2px 2px 0px #fff) 
+                drop-shadow(-2px -2px 0px #fff) 
+                drop-shadow(2px -2px 0px #fff) 
+                drop-shadow(-2px 2px 0px #fff)
+                drop-shadow(2px 0px 0px #fff)
+                drop-shadow(-2px 0px 0px #fff)
+                drop-shadow(0px 2px 0px #fff)
+                drop-shadow(0px -2px 0px #fff);
+        }
+
+        /* --- ASSET LAIN (Firebase, Microbit, Terminal) --- */
         .firebase-menu {
             position: absolute;
             top: 68vw; 
@@ -47,7 +92,6 @@
             z-index: 10;
         }
 
-        /* --- MICROBIT MENU (Pojok Kanan Tengah) --- */
         .microbit-menu {
             position: absolute;
             top: 68vw; 
@@ -57,10 +101,8 @@
             z-index: 10;
         }
 
-        /* --- SYSTEM TERMINAL MENU (Paling Bawah, Tengah) --- */
         .terminal-menu {
             position: absolute;
-            /* Diubah menjadi 106vw agar memberikan space longgar dari menu di atasnya */
             top: 106vw; 
             left: 50%;
             transform: translateX(-50%);
@@ -73,7 +115,12 @@
 <body>
 
     <div class="landing-container">
-        <img src="https://github.com/joanne1chz/exfinpro/blob/main/Main.png?raw=true" alt="Main Menu" class="main-menu">
+        
+        <div class="main-menu-wrapper">
+            <img src="https://github.com/joanne1chz/exfinpro/blob/main/Main.png?raw=true" alt="Main Menu" class="main-menu-img">
+            
+            <div class="status-kipas" id="main-status-kipas">OFF 🫠</div>
+        </div>
 
         <img src="https://github.com/joanne1chz/exfinpro/blob/main/firebase.png?raw=true" alt="Firebase Menu" class="firebase-menu">
 
