@@ -3,39 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Halaman Aset Visual Kita</title>
+    <title>Landing Page - Ticktock Golden</title>
     <style>
-        /* Mengatur agar body memenuhi layar penuh tanpa margin */
-        body {
+        * {
             margin: 0;
             padding: 0;
-            width: 100vw;
-            height: 100vh;
-            /* Latar belakang dasar sesuai permintaan */
-            background-color: #57BCB6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden; /* Sembunyikan scroll jika ada */
+            box-sizing: border-box;
         }
 
-        /* Kontainer untuk aset visual */
-        .visual-container {
-            width: 100%;
-            height: 100%;
-            /* Tautan gambar penuh yang benar untuk raw GitHub */
-            background-image: url('https://github.com/joanne1chz/exfinpro/blob/main/Bg.png?raw=true'); 
+        body {
+            /* Warna background dasar sesuai permintaanmu */
+            background-color: #57BCB6; 
+            /* Mengizinkan halaman untuk di-scroll ke bawah */
+            overflow-y: auto; 
+            overflow-x: hidden;
+        }
+
+        .landing-container {
+            width: 100vw;
+            /* Tinggi diatur auto/min-height agar memanjang ke bawah mengikuti aspek rasio gambar */
+            min-height: 200vh; 
+            
+            /* Memasukkan aset gambar */
+            background-image: url('https://github.com/joanne1chz/exfinpro/blob/main/Bg.png?raw=true');
             background-repeat: no-repeat;
-            /* Memposisikan konsol/robot di bagian atas tengah */
+            
+            /* Posisi dimulai dari atas dan pas di tengah secara horizontal */
             background-position: top center; 
-            /* Memastikan gambar menutupi seluruh kontainer */
-            background-size: cover; 
-            position: relative;
+            
+            /* KUNCI: Gambar akan memenuhi lebar laptop, dan tingginya otomatis memanjang ke bawah */
+            background-size: 100% auto; 
         }
     </style>
 </head>
 <body>
-    <div class="visual-container">
+
+    <div class="landing-container">
         </div>
+
 </body>
 </html>
