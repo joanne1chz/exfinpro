@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticktock Golden Project 🌱</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-yellow:    #fcd34d;
+            --bg-teal:      #2dd4bf;
+            --bg-pink:      #f472b6;
+            --arcade-dark:  #2b221e;
+            --arcade-card:  #443630;
+            --text-light:   #ffffff;
+            --gold-bright:  #fbbf24;
+            --btn-orange:   #f59e0b;
+            --btn-green:    #a3e635;
+            
+            --success:      #22c55e;
+            --danger:       #ef4444;
+            --warning:      #f59e0b;
+            --radius:       24px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Space Mono', monospace;
+            background: linear-gradient(135deg, var(--bg-yellow) 0%, var(--bg-yellow) 50%, var(--bg-teal) 50%, var(--bg-teal) 100%);
+            background-size: 100% 100%;
+            color: var(--arcade-dark);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* ===== HEADER / HERO TOP ===== */
+        .hero-section {
+            background: var(--arcade-card);
+            border: 6px solid var(--arcade-dark);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 24px;
+            color: white;
+            box-shadow: 8px 8px 0px var(--arcade-dark);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .hero-title-box {
+            background: var(--btn-orange);
+            border: 4px solid var(--arcade-dark);
+            border-radius: 16px;
+            padding: 12px;
+            text-align: center;
+            box-shadow: 4px 4px 0px var(--arcade-dark);
+        }
+
+        .hero-title-box h1 {
+            font-size: 1.8em;
+            font-weight: 900;
+            color: white;
+            text-shadow: 3px 3px 0 var(--arcade-dark);
+            font-style: italic;
+        }
+
+        /* Top Display Grid (On/Off, CM, Time) */
+        .display-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .display-panel {
+            background: white;
+            border: 4px solid var(--arcade-dark);
+            border-radius: 12px;
+            padding: 14px;
+            color: var(--arcade-dark);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: bold;
+        }
+
+        .display-panel.blue-glow {
+            background: #e0f2fe;
+            color: #0369a1;
+            font-size: 1.5em;
+        }
+
+        .display-panel.gold-glow {
+            background: #fef3c7;
+            color: #b45309;
+            font-size: 1.5em;
+        }
+
+        .upcoming-badge {
+            font-size: 10px;
+            background: var(--arcade-dark);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .time-bar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .time-box {
+            background: white;
+            border: 4px solid var(--arcade-dark);
+            border-radius: 8px;
+            padding: 8px;
+            text-align: center;
+            font-size: 0.9em;
+            color: var(--arcade-dark);
+            font-weight: bold;
+        }
+
+        /* ===== STATUS BADGES ===== */
+        .status-wrap {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+            justify-content: center;
+        }
+        .badge {
+            background: var(--arcade-card);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            border: 2px solid var(--arcade-dark);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .badge.online { background: var(--success); color: white; }
+
+        /* ===== CARDS GRID ===== */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .mb { margin-bottom: 20px; }
+
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+
+        /* Card Style - Firebase (Checkered Pattern Background) */
+        .card-firebase {
+            background-color: var(--arcade-card);
+            background-image: repeating-conic-gradient(#56453d 0% 25%, transparent 0% 50%);
+            background-size: 20px 20px;
+            border: 6px solid var(--arcade-dark);
+            border-radius: var(--radius);
+            padding: 24px;
+            color: white;
+            box-shadow: 8px 8px 0px var(--arcade-dark);
+        }
+
+        /* Card Style - Microbit & Modes */
+        .card-microbit {
+            background: var(--bg-yellow);
+            border: 6px solid var(--arcade-dark);
+            border-radius: var(--radius);
+            padding: 24px;
+            color: var(--arcade-dark);
+            box-shadow: 8px 8px 0px var(--arcade-dark);
+        }
+
+        .card-title-retro {
+            font-size: 1.2em;
+            font-weight: 900;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            font-style: italic;
+            text-shadow: 1px 1px 0px rgba(0,0,0,0.2);
+        }
+        .card-firebase .card-title-retro { color: var(--bg-teal); }
+
+        /* ===== FORMS & INPUTS ===== */
+        label {
+            display: inline-block;
+            background: var(--arcade-dark);
+            color: white;
+            padding: 2px 8px;
+            font-size: 10px;
+            text-transform: uppercase;
+            border-radius: 4px 4px 0 0;
+        }
+        .card-microbit label {
+            background: var(--arcade-card);
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg-teal);
+            border: 4px solid var(--arcade-dark);
+            border-radius: 12px;
+            color: var(--arcade-dark);
+            font-family: 'Space Mono', monospace;
+            font-weight: bold;
+            outline: none;
+            margin-bottom: 14px;
+        }
+        input:focus { background: white; }
+
+        /* ===== RETRO BUTTONS ===== */
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: 4px solid var(--arcade-dark);
+            border-radius: 12px;
+            font-family: 'Space Mono', monospace;
+            font-weight: 900;
+            font-size: 1.1em;
+            font-style: italic;
+            cursor: pointer;
+            box-shadow: 0 6px 0 var(--arcade-dark);
+            transition: all 0.1s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 var(--arcade-dark);
+        }
+        .btn-teal { background: var(--bg-teal); color: var(--arcade-dark); }
+        .btn-orange { background: var(--btn-orange); color: white; }
+        .btn-green { background: var(--btn-green); color: var(--arcade-dark); }
+        .btn-dark { background: var(--arcade-dark); color: white; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: 0 6px 0 var(--arcade-dark); }
+
+        /* ===== MODE BANNER ===== */
+        .mode-banner-retro {
+            background: var(--bg-pink);
+            border: 6px solid var(--arcade-dark);
+            border-radius: var(--radius);
+            padding: 16px 24px;
+            box-shadow: 8px 8px 0px var(--arcade-dark);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .mode-pill {
+            background: white;
+            border: 3px solid var(--arcade-dark);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        /* ===== ALERT BANNER ===== */
+        .alert-banner {
+            display: none;
+            background: #ef4444;
+            color: white;
+            border: 6px solid var(--arcade-dark);
+            border-radius: var(--radius);
+            padding: 16px 24px;
+            box-shadow: 8px 8px 0px var(--arcade-dark);
+        }
+        .alert-banner.show { display: flex; align-items: center; gap: 16px; }
+
+        /* ===== LIVE SENSORS ===== */
+        .sensor-container-retro {
+            background: white;
+            border: 6px solid var(--arcade-dark);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: 8px 8px 0px var(--arcade-dark);
+        }
+        .sensor-header-tag {
+            font-size: 11px;
+            font-weight: bold;
+            color: var(--arcade-card);
+            border-bottom: 2px dashed var(--arcade-dark);
+            padding-bottom: 6px;
+            margin-bottom: 12px;
+        }
+        .sensor-value-big {
+            font-size: 2.5em;
+            font-weight: 900;
+            color: var(--arcade-dark);
+        }
+        .sensor-bar-retro {
+            height: 16px;
+            background: #e2e8f0;
+            border: 3px solid var(--arcade-dark);
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .sensor-bar-fill-retro {
+            height: 100%;
+            background: var(--btn-orange);
+            width: 0%;
+        }
+        .chart-wrap { height: 70px; width: 100%; margin-top: 10px; }
+
+        /* ===== ACTUATOR / RELAY CARD ===== */
+        .relay-box-retro {
+            background: white;
+            border: 6px solid var(--arcade-dark);
+            border-radius: var(--radius);
+            padding: 24px;
+            text-align: center;
+            box-shadow: 8px 8px 0px var(--arcade-dark);
+        }
+        .relay-card.on { background: #dcfce7; border-color: var(--success); }
+        
+        /* Toggle Switch Retro */
+        .toggle-wrap { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 12px; }
+        .toggle { position: relative; display: inline-block; width: 60px; height: 32px; }
+        .toggle input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider {
+            position: absolute; cursor: pointer; inset: 0;
+            background: var(--arcade-card); transition: .2s; border: 3px solid var(--arcade-dark); border-radius: 32px;
+        }
+        .toggle-slider:before {
+            position: absolute; content: ''; height: 20px; width: 20px;
+            left: 4px; bottom: 3px; background: white;
+            transition: .2s; border-radius: 50%; border: 2px solid var(--arcade-dark);
+        }
+        input:checked + .toggle-slider { background: var(--btn-green); }
+        input:checked + .toggle-slider:before { transform: translateX(26px); }
+
+        /* ===== SYSTEM TERMINAL ===== */
+        .terminal-retro {
+            background: var(--arcade-dark);
+            border: 6px solid var(--arcade-card);
+            border-radius: var(--radius);
+            padding: 20px;
+            color: #a3e635;
+            box-shadow: 8px 8px 0px rgba(0,0,0,0.15);
+        }
+        .terminal-header-retro {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border-bottom: 3px solid var(--arcade-card);
+            padding-bottom: 10px;
+            margin-bottom: 12px;
+        }
+        .circle-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .log-panel-retro {
+            height: 180px;
+            overflow-y: auto;
+            background: #1a1512;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+<div class="status-wrap">
+    <div class="badge" id="status-bt"><i class="fab fa-bluetooth-b"></i> BT Offline</div>
+    <div class="badge" id="status-fb"><i class="fas fa-cloud"></i> DB Offline</div>
+</div>
+
+<div class="wrapper">
+
+    <div class="hero-section">
+        <div class="hero-title-box">
+            <h1>Ticktock Golden Project</h1>
+        </div>
+        
+        <div class="display-grid">
+            <div class="display-panel blue-glow">
+                <span>Status:</span>
+                <strong id="lbl-relay-top">Off</strong>
+                <span style="font-size:24px;">🥶</span>
+            </div>
+            <div class="display-panel gold-glow">
+                <span id="val-jarak-top">-- CM</span>
+                <span class="upcoming-badge">upcoming</span>
+            </div>
+        </div>
+
+        <div class="time-bar">
+            <div class="time-box">10.53</div>
+            <div class="time-box">32 C</div>
+            <div class="time-box">Tuesday 26/5/26</div>
+        </div>
+    </div>
+
+    <div class="grid-2 mb">
+        <div class="card-firebase">
+            <div class="card-title-retro">Firebase Cloud Sync</div>
+            <div>
+                <label>Api Key</label>
+                <input type="password" id="fb-apiKey" placeholder="AIzaSy...">
+            </div>
+            <div>
+                <label>Database URL</label>
+                <input type="text" id="fb-dbUrl" placeholder="https://project-rtdb.firebaseio.com">
+            </div>
+            <div>
+                <label>Node Path</label>
+                <input type="text" id="fb-path" value="smarthome/ruangan1">
+            </div>
+            <button class="btn btn-teal" id="btn-connect-fb">Connect</button>
+        </div>
+
+        <div class="card-microbit">
+            <div class="card-title-retro">Micro:bit Bluetooth</div>
+            <p style="font-size:11px; margin-bottom:14px; opacity:0.8; line-height:1.4;">
+                📥 RX: <code>key,value</code> | 📤 TX: <code>key,value↵</code>
+            </p>
+            <div style="display:flex; flex-direction:column; gap:14px;">
+                <button class="btn btn-orange" id="btn-connect-ble">Connect Microbit</button>
+                <button class="btn btn-green" id="btn-disconnect-ble" disabled>Disconnect</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="mode-banner-retro mb" id="modeBanner">
+        <div>
+            <strong style="color:white; display:block;">🤖 System Mode</strong>
+            <span style="font-size:11px; color:rgba(255,255,255,0.8);">Auto: Sensor Control | Manual: Toggle Click</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <div class="mode-pill" id="modePill">OTOMATIS</div>
+            <button class="btn btn-dark" id="btnToggleMode" style="font-size:12px; padding:6px 12px; box-shadow:0 3px 0 #000;">Ke Mode Manual</button>
+        </div>
+    </div>
+
+    <div class="alert-banner mb" id="alertEmber">
+        <div style="font-size:24px;">⚠️</div>
+        <div>
+            <strong>Air Ember Hampir Habis!</strong>
+            <p style="font-size:11px;">Jarak > 30 cm. Segera lakukan mixing manual atau isi ulang ember.</p>
+        </div>
+    </div>
+
+    <div class="grid-2 mb">
+        <div class="sensor-container-retro">
+            <div class="sensor-header-tag">📡 Ultrasonik 1 · P0 / P1</div>
+            <div class="sensor-value-big" id="val-jarak">--<span style="font-size:16px;">cm</span></div>
+            <p style="font-size:11px; color:gray;">Relay aktif jika jarak ≥ 30 cm</p>
+            <div class="sensor-bar-retro">
+                <div class="sensor-bar-fill-retro" id="bar-jarak"></div>
+            </div>
+            <div class="chart-wrap"><canvas id="chart-jarak"></canvas></div>
+        </div>
+
+        <div class="sensor-container-retro" id="card-ember">
+            <div class="sensor-header-tag">🌊 Ultrasonik 2 · Ember · P3 / P8</div>
+            <div class="sensor-value-big" id="val-jarak-manual">--<span style="font-size:16px;">cm</span></div>
+            <p style="font-size:11px; color:gray;">Monitoring level air penampungan</p>
+            <div class="sensor-bar-retro">
+                <div class="sensor-bar-fill-retro" id="bar-jarak-manual" style="background:var(--bg-teal);"></div>
+            </div>
+            <div class="chart-wrap"><canvas id="chart-jarak-manual"></canvas></div>
+        </div>
+    </div>
+
+    <div class="relay-box-retro mb" id="card-relay">
+        <div style="font-size:28px; margin-bottom:6px;">⚡</div>
+        <strong style="font-size:1.2em; display:block;" id="lbl-relay">OFF</strong>
+        <span style="font-size:11px; color:gray; display:block; margin-top:4px;">Pin P13 · Pompa Utama Hidroponik</span>
+        
+        <div class="toggle-wrap" id="manual-relay" style="display:none;">
+            <span style="font-size:12px; font-weight:bold;">Manual Switch:</span>
+            <label class="toggle">
+                <input type="checkbox" id="sw-relay" onchange="window.toggleRelay(this.checked)">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="grid-2 mb">
+        <div class="sensor-container-retro">
+            <div class="sensor-header-tag">📊 Riwayat Grafik Jarak</div>
+            <div style="height:120px;"><canvas id="chart-jarak-big"></canvas></div>
+        </div>
+        <div class="sensor-container-retro">
+            <div class="sensor-header-tag">📊 Riwayat Grafik Jarak Manual</div>
+            <div style="height:120px;"><canvas id="chart-jarak-manual-big"></canvas></div>
+        </div>
+    </div>
+
+    <div class="terminal-retro">
+        <div class="terminal-header-retro">
+            <div class="circle-dot" style="background:#ef4444;"></div>
+            <div class="circle-dot" style="background:#f59e0b;"></div>
+            <div class="circle-dot" style="background:#a3e635;"></div>
+            <span style="font-size:11px; font-weight:bold; margin-left:6px;">System_terminal</span>
+            <button class="btn btn-dark" id="btnClearLog" style="margin-left:auto; font-size:10px; padding:2px 8px; box-shadow:none; border-width:2px; width:auto;">Clear</button>
+        </div>
+        <div id="terminalLog" class="log-panel-retro"></div>
+    </div>
+
+</div>
+
+<script type="module">
+import { initializeApp, getApps, deleteApp }     from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getDatabase, ref, onValue, update, set } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+
+const state = {
+    db: null, path: "", unsub: null, data: {},
+    device: null, txChar: null, rxChar: null,
+    bleConnected: false, bleBuffer: "",
+    modeOtomatis: 1,
+    charts: {},
+    history: {
+        jarak:        { labels: [], data: [] },
+        jarak_manual: { labels: [], data: [] }
+    }
+};
+
+const MAX_PTS = 30;
+const $ = id => document.getElementById(id);
+
+function log(msg, color = "#a3e635") {
+    const t = new Date().toLocaleTimeString('id-ID', { hour12: false });
+    $('terminalLog').insertAdjacentHTML('afterbegin',
+        `<div><span style="opacity:0.5;">[${t}]</span><span style="color:${color}"> ${msg}</span></div>`);
+}
+
+function updateBTStatus() {
+    $('btn-connect-ble').disabled    = state.bleConnected;
+    $('btn-disconnect-ble').disabled = !state.bleConnected;
+    const b = $('status-bt');
+    b.innerHTML = state.bleConnected ? '<i class="fab fa-bluetooth-b"></i> BT Connected' : '<i class="fab fa-bluetooth-b"></i> BT Offline';
+    b.className = 'badge' + (state.bleConnected ? ' online' : '');
+}
+
+function updateDBStatus(ok) {
+    const b = $('status-fb');
+    b.innerHTML = ok ? '<i class="fas fa-cloud"></i> DB Synced' : '<i class="fas fa-cloud"></i> DB Offline';
+    b.className = 'badge' + (ok ? ' online' : '');
+}
+
+function applyMode(isAuto) {
+    state.modeOtomatis = isAuto ? 1 : 0;
+    const pill   = $('modePill');
+    const btnTgl = $('btnToggleMode');
+
+    if (isAuto) {
+        pill.textContent = 'OTOMATIS';
+        btnTgl.textContent = 'Ke Mode Manual';
+        $('manual-relay').style.display = 'none';
+    } else {
+        pill.textContent = 'MANUAL';
+        btnTgl.textContent = 'Ke Mode Otomatis';
+        $('manual-relay').style.display = 'flex';
+    }
+
+    sendBLE("mode", isAuto ? 1 : 0);
+    if (state.db) update(ref(state.db, `${state.path}/mode`), { value: isAuto ? 1 : 0 });
+    log(`Mode → ${isAuto ? 'OTOMATIS' : 'MANUAL'}`, isAuto ? '#a3e635' : '#f59e0b');
+}
+
+$('btnToggleMode').onclick = () => applyMode(state.modeOtomatis === 0);
+
+function updateRelayUI(isOn) {
+    const card = $('card-relay');
+    const sw   = $('sw-relay');
+    
+    $('lbl-relay').textContent = isOn ? 'ON ✓' : 'OFF';
+    $('lbl-relay-top').textContent = isOn ? 'On' : 'Off';
+    
+    if (isOn) {
+        card.style.background = "#e2f8e2";
+    } else {
+        card.style.background = "white";
+    }
+    if (sw && document.activeElement !== sw) sw.checked = isOn;
+}
+
+function updateSensorUI(key, val) {
+    const elId = key === 'jarak_manual' ? 'val-jarak-manual' : `val-${key}`;
+    const barId = key === 'jarak_manual' ? 'bar-jarak-manual' : `bar-${key}`;
+    const el = $(elId);
+    if (!el) return;
+
+    let numSpan = el.querySelector('.num');
+    if (!numSpan) {
+        el.innerHTML = `<span class="num">${val}</span><span style="font-size:16px;"> cm</span>`;
+    } else {
+        numSpan.textContent = val;
+    }
+
+    if (key === 'jarak') {
+        $('val-jarak-top').textContent = val + " CM";
+    }
+
+    const bar = $(barId);
+    if (bar) bar.style.width = Math.min(100, (val / 150) * 100) + '%';
+
+    if (key === 'jarak_manual') {
+        const alert = $('alertEmber');
+        const card  = $('card-ember');
+        if (val > 30) {
+            alert.classList.add('show');
+            if (card) card.style.borderColor = 'var(--danger)';
+        } else {
+            alert.classList.remove('show');
+            if (card) card.style.borderColor = 'var(--arcade-dark)';
+        }
+    }
+}
+
+const SVC = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+const TX  = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
+const RX  = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
+
+async function connectBLE() {
+    try {
+        if (!navigator.bluetooth) throw new Error("Browser tidak mendukung Web Bluetooth.");
+        log("Scanning Micro:bit...", "#f59e0b");
+        state.device = await navigator.bluetooth.requestDevice({
+            filters: [{ namePrefix: "BBC micro:bit" }],
+            optionalServices: [SVC]
+        });
+        state.device.addEventListener("gattserverdisconnected", () => {
+            state.bleConnected = false; updateBTStatus();
+            log("BLE Terputus!", "#ef4444");
+        });
+        const server  = await state.device.gatt.connect();
+        const service = await server.getPrimaryService(SVC);
+        state.txChar  = await service.getCharacteristic(TX);
+        state.rxChar  = await service.getCharacteristic(RX);
+        await state.txChar.startNotifications();
+        state.txChar.addEventListener("characteristicvaluechanged", onBLEData);
+        state.bleConnected = true; updateBTStatus();
+        log(`✓ Terhubung: ${state.device.name}`, "#a3e635");
+    } catch (e) { log(`BLE Error: ${e.message}`, "#ef4444"); }
+}
+
+function onBLEData(event) {
+    let arr = [];
+    for (let i = 0; i < event.target.value.byteLength; i++)
+        arr.push(event.target.value.getUint8(i));
+    state.bleBuffer += String.fromCharCode.apply(null, arr);
+    const lines = state.bleBuffer.split('\n');
+    state.bleBuffer = lines.pop() || "";
+    lines.forEach(line => { const t = line.trim(); if (t) processBLELine(t); });
+}
+
+function processBLELine(txt) {
+    log(`RX ← ${txt}`, "#2dd4bf");
+    if (!txt.includes(',')) return;
+
+    const idx = txt.indexOf(',');
+    const key = txt.substring(0, idx).trim();
+    const val = parseFloat(txt.substring(idx + 1).trim());
+    if (isNaN(val)) return;
+
+    if (key === "mode") {
+        applyMode(val === 1);
+        return;
+    }
+    if (key === "Relay") {
+        updateRelayUI(val === 1);
+        if (state.db) update(ref(state.db, `${state.path}/relay`), { value: val, tipe: 'switch' });
+        return;
+    }
+    if (key === "jarak") {
+        updateSensorUI("jarak", val);
+        pushHistory("jarak", val);
+        if (state.db) update(ref(state.db, `${state.path}/jarak`), { value: val, tipe: 'sensor', satuan: 'cm' });
+        return;
+    }
+    if (key === "jarak_manual") {
+        updateSensorUI("jarak_manual", val);
+        pushHistory("jarak_manual", val);
+        if (state.db) update(ref(state.db, `${state.path}/jarak_manual`), { value: val, tipe: 'sensor', satuan: 'cm' });
+        return;
+    }
+}
+
+async function sendBLE(key, val) {
+    if (!state.rxChar) return;
+    const payload = `${key},${val}\n`;
+    try {
+        await state.rxChar.writeValue(new TextEncoder().encode(payload));
+        log(`TX → ${payload.trim()}`, "#fbbf24");
+    } catch (e) { log(`TX Error: ${e.message}`, "#ef4444"); }
+}
+
+window.toggleRelay = (isChecked) => {
+    if (state.modeOtomatis === 1) return;
+    const val = isChecked ? 1 : 0;
+    updateRelayUI(isChecked);
+    sendBLE("Relay", val);
+    if (state.db) update(ref(state.db, `${state.path}/relay`), { value: val });
+    log(`Relay → ${isChecked ? 'ON' : 'OFF'}`, "#f59e0b");
+};
+
+async function connectFirebase() {
+    const apiKey = $('fb-apiKey').value.trim();
+    const dbUrl  = $('fb-dbUrl').value.trim();
+    const path   = $('fb-path').value.trim() || "smarthome/ruangan1";
+    if (!apiKey || !dbUrl) { alert("Isi API Key dan Database URL!"); return; }
+
+    try {
+        const apps = getApps();
+        if (apps.length > 0) await deleteApp(apps[0]);
+        if (state.unsub) state.unsub();
+
+        const app = initializeApp({
+            apiKey, databaseURL: dbUrl,
+            projectId: dbUrl.replace("https://","").split(".")[0]
+        });
+        state.db   = getDatabase(app);
+        state.path = path;
+        log(`Menghubungkan → /${path}`, "#f59e0b");
+
+        const initData = {
+            jarak:        { tipe: 'sensor', value: 0, satuan: 'cm' },
+            jarak_manual: { tipe: 'sensor', value: 0, satuan: 'cm' },
+            relay:        { tipe: 'switch', value: 0 },
+            mode:         { tipe: 'switch', value: 1 }
+        };
+
+        state.unsub = onValue(ref(state.db, path), (snap) => {
+            const d = snap.val();
+            if (!d) { set(ref(state.db, path), initData); return; }
+            state.data = d;
+            updateDBStatus(true);
+
+            if (d.jarak)        updateSensorUI("jarak",        d.jarak.value ?? 0);
+            if (d.jarak_manual) updateSensorUI("jarak_manual", d.jarak_manual.value ?? 0);
+            if (d.relay)        updateRelayUI((d.relay.value ?? 0) === 1);
+            if (d.mode)         applyMode((d.mode.value ?? 1) === 1);
+        }, err => { log(`DB Error: ${err.message}`, "#ef4444"); updateDBStatus(false); });
+
+        log(`✓ Firebase OK: /${path}`, "#a3e635");
+        localStorage.setItem('smarthome_cfg', JSON.stringify({ apiKey, dbUrl, path }));
+    } catch (e) { log(`DB Error: ${e.message}`, "#ef4444"); updateDBStatus(false); }
+}
+
+const CHART_CFG = {
+    jarak:        { color: '#f59e0b', label: 'Jarak' },
+    jarak_manual: { color: '#2dd4bf', label: 'Jarak Manual' }
+};
+
+function makeChart(canvasId, key, height = 90) {
+    const canvas = $(canvasId);
+    if (!canvas) return null;
+    if (state.charts[canvasId]) state.charts[canvasId].destroy();
+
+    const ctx   = canvas.getContext('2d');
+    const color = CHART_CFG[key].color;
+    const grad  = ctx.createLinearGradient(0, 0, 0, height);
+    grad.addColorStop(0, color + '55');
+    grad.addColorStop(1, color + '00');
+
+    return new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels:   state.history[key].labels,
+            datasets: [{ data: state.history[key].data, borderColor: color, backgroundColor: grad, borderWidth: 3, pointRadius: 0, fill: true, tension: 0.2 }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false }, tooltip: { enabled: false } },
+            scales: { y: { display: false }, x: { display: false } },
+            animation: { duration: 150 }
+        }
+    });
+}
+
+function initCharts() {
+    state.charts['chart-jarak']         = makeChart('chart-jarak', 'jarak', 70);
+    state.charts['chart-jarak-manual']  = makeChart('chart-jarak-manual', 'jarak_manual', 70);
+    state.charts['chart-jarak-big']     = makeChart('chart-jarak-big', 'jarak', 120);
+    state.charts['chart-jarak-manual-big'] = makeChart('chart-jarak-manual-big', 'jarak_manual', 120);
+}
+
+function pushHistory(key, val) {
+    const h = state.history[key];
+    if (!h) return;
+    h.labels.push(new Date().toLocaleTimeString('id-ID', { hour12: false }));
+    h.data.push(parseFloat(val) || 0);
+    if (h.labels.length > MAX_PTS) { h.labels.shift(); h.data.shift(); }
+
+    [`chart-${key === 'jarak_manual' ? 'jarak-manual' : key}`,
+     `chart-${key === 'jarak_manual' ? 'jarak-manual' : key}-big`].forEach(id => {
+        const ch = state.charts[id];
+        if (!ch) return;
+        ch.data.labels           = h.labels;
+        ch.data.datasets[0].data = h.data;
+        ch.update('none');
+    });
+}
+
+$('btn-connect-ble').onclick    = connectBLE;
+$('btn-disconnect-ble').onclick = () => { if (state.device) state.device.gatt.disconnect(); };
+$('btn-connect-fb').onclick     = connectFirebase;
+$('btnClearLog').onclick        = () => $('terminalLog').innerHTML = '';
+
+window.onload = () => {
+    initCharts();
+    applyMode(true);
+    const saved = JSON.parse(localStorage.getItem('smarthome_cfg') || '{}');
+    if (saved.apiKey) {
+        $('fb-apiKey').value = saved.apiKey;
+        $('fb-dbUrl').value  = saved.dbUrl;
+        $('fb-path').value   = saved.path || "smarthome/ruangan1";
+    }
+    log("✓ System Ready — Connect Firebase & Micro:bit to start gaming! 🌱", "#a3e635");
+};
+</script>
+</body>
+</html>
