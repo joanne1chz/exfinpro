@@ -1,172 +1,228 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UI Panel Update</title>
-<style>
-  /* Menggunakan font blocky yang disimulasikan untuk estetika retro */
-  body {
-    margin: 0;
-    padding: 0;
-    background-color: #333;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    font-family: 'Arial Black', Gadget, sans-serif;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page - Ticktock Golden</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap" rel="stylesheet">
+    <style>
+        /* Impor font Mobitale Cnd */
+        @font-face {
+            font-family: 'Mobitale Cnd';
+            src: local('Mobitale Cnd'), local('Mobitale-Cnd');
+        }
 
-  .panel-outer {
-    position: relative;
-    width: 600px;
-    height: 300px;
-    background-color: #f7e0bc; /* Warna border panel luar */
-    border-radius: 20px;
-    box-shadow: 10px 10px 0px rgba(0,0,0,0.5); /* Bayangan luar */
-    overflow: hidden;
-  }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  .panel-inner {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    width: calc(100% - 30px);
-    height: calc(100% - 60px);
-    background-color: #f1b333; /* Latar belakang utama (kuning-oranye) */
-    border-radius: 15px;
-    overflow: hidden;
-  }
+        body {
+            background-color: #57BCB6; 
+            overflow-y: auto; 
+            overflow-x: hidden;
+        }
 
-  .green-background {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 45%;
-    height: 100%;
-    background-color: #9aca76; /* Latar belakang hijau */
-    border-radius: 0 15px 15px 0;
-  }
+        .landing-container {
+            width: 100vw;
+            height: 148vw; 
+            background-image: url('https://github.com/joanne1chz/exfinpro/blob/main/Bg.png?raw=true');
+            background-repeat: no-repeat;
+            background-position: top center; 
+            background-size: 100% auto; 
+            position: relative; 
+        }
 
-  /* Data URI SVG untuk bentuk abstrak hitam */
-  .abstract-shape {
-    position: absolute;
-    top: -10%; /* Vertikal relatif terhadap text block */
-    right: 5%;
-    width: 350px;
-    height: 160px;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="30,70 50,30 65,65 85,15 100,50 65,100" fill="black" stroke="black" stroke-width="2"/></svg>');
-    background-repeat: no-repeat;
-    background-size: cover;
-    z-index: 1;
-    transform: rotate(10deg);
-  }
+        /* --- WRAPPER MAIN MENU --- */
+        .main-menu-wrapper {
+            position: absolute;
+            top: 6vw;
+            right: 5vw;
+            width: 52vw;
+            height: auto;
+            z-index: 10;
+        }
 
-  .keyboard-keys {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 45px;
-    background-color: #f7e0bc;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    z-index: 2;
-  }
+        .main-menu-img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
 
-  .key {
-    width: 25px;
-    height: 35px;
-    background-color: #fff;
-    border-radius: 5px;
-    border: 2px solid #ccc; /* Border key */
-  }
+        /* --- CONTAINER STATUS KIPAS (Kotak Biru) --- */
+        .status-container {
+            position: absolute;
+            top: 46.5%; 
+            left: 71.5%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            gap: 0.8vw; 
+            font-family: 'Mobitale Cnd', 'Arial Black', sans-serif;
+            font-size: 4.5vw; 
+            font-weight: bold;
+            white-space: nowrap;
+        }
 
-  /* Grup Kapsul Terpadu dengan Teks yang Dipindah dan Terintegrasi */
-  .capsule-group {
-    position: absolute;
-    top: 55%; /* Posisi vertikal, di bagian bawah panel atas */
-    left: 20%;
-    display: flex;
-    align-items: center;
-    z-index: 3;
-    pointer-events: none; /* Mencegah interaksi teks jika perlu */
-  }
+        .status-text {
+            text-transform: uppercase;
+            background: linear-gradient(to bottom, #75D6FF, #0783B7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: 
+                drop-shadow(0px 4px 0px #0269B9)
+                drop-shadow(2px 2px 0px #fff) 
+                drop-shadow(-2px -2px 0px #fff) 
+                drop-shadow(2px -2px 0px #fff) 
+                drop-shadow(-2px 2px 0px #fff)
+                drop-shadow(2px 0px 0px #fff)
+                drop-shadow(-2px 0px 0px #fff)
+                drop-shadow(0px 2px 0px #fff)
+                drop-shadow(0px -2px 0px #fff);
+        }
 
-  /* **AREA BORDER KAPSUL** */
-  .stylized-capsule-border {
-    position: absolute;
-    top: -15px;
-    left: -15px;
-    width: calc(100% + 30px);
-    height: calc(100% + 30px);
-    background-color: rgba(255, 255, 255, 0.9); /* Area kapsul putih */
-    border-radius: 15px;
-    z-index: -1;
-    /* Mensimulasikan outline border putih visual */
-  }
+        .status-emoji {
+            -webkit-text-fill-color: initial; 
+            background: none;
+            filter: drop-shadow(0px 3px 0px #0269B9);
+        }
 
-  .text-prefix {
-    font-size: 50px;
-    font-weight: bold;
-    color: #000;
-    text-shadow:
-      -2px -2px 0 #fff,
-       2px -2px 0 #fff,
-      -2px  2px 0 #fff,
-       2px  2px 0 #fff;
-    margin-right: 15px;
-  }
 
-  .stylized-cm {
-    font-size: 60px;
-    font-weight: bold;
-    font-style: italic;
-    color: #000;
-    text-shadow:
-      -2px -2px 0 #fff,
-       2px -2px 0 #fff,
-      -2px  2px 0 #fff,
-       2px  2px 0 #fff;
-    margin-right: 30px; /* Jarak presisi untuk teks yang terintegrasi */
-  }
+        /* --- INDIKATOR JARAK (Kotak Oren Kiri) --- */
+        .bus-distance {
+            position: absolute;
+            /* Koordinat aman pas di kotak oren sesuai request */
+            top: 65%; 
+            left: 62%;
+            transform: translate(-50%, -50%);
+            
+            font-family: 'Mobitale Cnd', 'Arial Black', sans-serif;
+            font-size: 4.5vw; 
+            font-weight: bold;
+            color: #000000; 
+            white-space: nowrap;
 
-  /* **TEKS MOVED DAN RIGHT-ALIGNED** */
-  .disconnected-text {
-    font-size: 20px;
-    font-weight: bold;
-    color: #fff;
-    text-shadow: 2px 2px 0px rgba(0,0,0,0.6); /* Outline/bayangan tipis */
-    font-family: sans-serif; /* Font sans-serif yang lebih bersih untuk teks kecil */
-  }
+            filter: 
+                drop-shadow(0px 4px 0px #000000)
+                drop-shadow(2px 2px 0px #fff) 
+                drop-shadow(-2px -2px 0px #fff) 
+                drop-shadow(2px -2px 0px #fff) 
+                drop-shadow(-2px 2px 0px #fff)
+                drop-shadow(2px 0px 0px #fff)
+                drop-shadow(-2px 0px 0px #fff)
+                drop-shadow(0px 2px 0px #fff)
+                drop-shadow(0px -2px 0px #fff);
+        }
 
-</style>
+        /* --- STATUS KONEKSI (Kapsul Hitam Kanan) --- */
+        .bus-status {
+            position: absolute;
+            /* Koordinat center pas di dalam kapsul hitam */
+            top: 65.5%; 
+            left: 81.5%; 
+            transform: translate(-50%, -50%);
+            
+            font-family: 'Inter', sans-serif;
+            font-weight: 600; /* Semi Bold */
+            font-size: 1.5vw; /* Dikecilkan agar pas masuk kapsul dan tidak luber */
+            color: #EAE0CD;
+            text-transform: lowercase; 
+            white-space: nowrap;
+            
+            /* Stroke warna 493A31 tipis */
+            filter: 
+                drop-shadow(1px 1px 0px #493A31)
+                drop-shadow(-1px -1px 0px #493A31)
+                drop-shadow(1px -1px 0px #493A31)
+                drop-shadow(-1px 1px 0px #493A31);
+        }
+
+
+        /* --- ASSET LAIN --- */
+        .firebase-menu {
+            position: absolute;
+            top: 68vw; 
+            left: 6vw; 
+            width: 38vw; 
+            height: auto;
+            z-index: 10;
+        }
+
+        .microbit-menu {
+            position: absolute;
+            top: 68vw; 
+            right: 6vw; 
+            width: 38vw; 
+            height: auto;
+            z-index: 10;
+        }
+
+        .terminal-menu {
+            position: absolute;
+            top: 106vw; 
+            left: 50%;
+            transform: translateX(-50%);
+            width: 88vw; 
+            height: auto;
+            z-index: 10;
+        }
+    </style>
 </head>
 <body>
-  <div class="panel-outer">
-    <div class="panel-inner">
-      <div class="green-background"></div>
-      <div class="abstract-shape"></div>
+
+    <div class="landing-container">
+        
+        <div class="main-menu-wrapper">
+            <img src="https://github.com/joanne1chz/exfinpro/blob/main/Main.png?raw=true" alt="Main Menu" class="main-menu-img">
+            
+            <div class="status-container" id="main-status-kipas">
+                <span class="status-text">OFF</span>
+                <span class="status-emoji">🫠</span>
+            </div>
+
+            <div class="bus-distance" id="main-jarak-bus">- CM</div>
+            
+            <div class="bus-status" id="bus-status-text">disconnected</div>
+        </div>
+
+        <img src="https://github.com/joanne1chz/exfinpro/blob/main/firebase.png?raw=true" alt="Firebase Menu" class="firebase-menu">
+
+        <img src="https://github.com/joanne1chz/exfinpro/blob/main/microbit.png?raw=true" alt="Microbit Menu" class="microbit-menu">
+
+        <img src="https://github.com/joanne1chz/exfinpro/blob/main/system%20terminal.png?raw=true" alt="System Terminal" class="terminal-menu">
     </div>
-    <div class="keyboard-keys">
-      <div class="key"></div>
-      <div class="key"></div>
-      <div class="key"></div>
-      <div class="key"></div>
-      <div class="key"></div>
-      <div class="key"></div>
-      <div class="key"></div>
-      <div class="key"></div>
-      <div class="key"></div>
-    </div>
-    
-    <div class="capsule-group">
-      <div class="stylized-capsule-border"></div>
-      <span class="text-prefix">-</span>
-      <div class="stylized-cm">CM</div>
-      <span class="disconnected-text">disconnected</span>
-    </div>
-  </div>
+
+    <script>
+        // Logika update status mengikuti nilai jarak sensor secara real-time
+        function updateUltrasonicStatus() {
+            const distanceElement = document.getElementById('main-jarak-bus');
+            const statusElement = document.getElementById('bus-status-text');
+            
+            if (!distanceElement || !statusElement) return;
+
+            let rawText = distanceElement.innerText.trim().toUpperCase();
+
+            // Jika belum konek atau ada tanda strip
+            if (rawText === "" || rawText === "- CM" || rawText.includes("-")) {
+                statusElement.innerText = "disconnected";
+                return;
+            }
+
+            // Ambil angka saja
+            let distanceValue = parseInt(rawText.replace(/[^0-9]/g, ''));
+
+            if (isNaN(distanceValue)) {
+                statusElement.innerText = "disconnected";
+            } else if (distanceValue === 0) {
+                statusElement.innerText = "arrived";
+            } else if (distanceValue > 0) {
+                statusElement.innerText = "upcoming";
+            }
+        }
+
+        // Jalankan saat load awal
+        window.addEventListener('DOMContentLoaded', updateUltrasonicStatus);
+    </script>
 </body>
 </html>
