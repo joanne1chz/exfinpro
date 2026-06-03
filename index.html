@@ -37,14 +37,24 @@
             z-index: 10;
         }
 
-        /* --- FIREBASE MENU (Pojok Kiri, Diperkecil & Diberi Space) --- */
+        /* --- FIREBASE MENU (Pojok Kiri Bawah) --- */
         .firebase-menu {
             position: absolute;
-            /* Diturunkan dari 62vw ke 68vw agar tidak menabrak arcade di atasnya */
             top: 68vw; 
-            /* Tetap konsisten di pojok kiri */
             left: 6vw; 
-            /* Ukuran dikecilkan sedikit dari 44vw ke 38vw agar proporsinya pas */
+            width: 38vw; 
+            height: auto;
+            z-index: 10;
+        }
+
+        /* --- MICROBIT MENU (Pojok Kanan Bawah) --- */
+        .microbit-menu {
+            position: absolute;
+            /* Sejajar secara vertikal dengan menu Firebase */
+            top: 68vw; 
+            /* Diletakkan di sebelah kanan */
+            right: 6vw; 
+            /* Ukuran disamakan dengan menu Firebase agar simetris */
             width: 38vw; 
             height: auto;
             z-index: 10;
@@ -57,6 +67,8 @@
         <img src="https://github.com/joanne1chz/exfinpro/blob/main/Main.png?raw=true" alt="Main Menu" class="main-menu">
 
         <img src="https://github.com/joanne1chz/exfinpro/blob/main/firebase.png?raw=true" alt="Firebase Menu" class="firebase-menu">
+
+        <img src="https://github.com/joanne1chz/exfinpro/blob/main/microbit.png?raw=true" alt="Microbit Menu" class="microbit-menu">
     </div>
 
 </body>
