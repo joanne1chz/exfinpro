@@ -88,12 +88,12 @@
         }
 
 
-        /* --- CONTAINER INDIKATOR BUS ULTRASONIK (Dinaikkan ke Kotak Oren) --- */
+        /* --- CONTAINER INDIKATOR BUS ULTRASONIK (Kotak Oren - DIPERBAIKI TOTAL) --- */
         .bus-container {
             position: absolute;
-            /* Diubah dari 79% menjadi 72% agar teks naik tepat di dalam kotak oren */
-            top: 72%; 
-            left: 65%;
+            /* Diubah menjadi top: 28% dan left: 55% agar teks lompat naik tepat di tengah area oren */
+            top: 28%; 
+            left: 55%;
             transform: translate(-50%, -50%);
             
             font-family: 'Mobitale Cnd', 'Arial Black', sans-serif;
@@ -102,7 +102,7 @@
             color: #000000; 
             white-space: nowrap;
 
-            /* Efek Stroke Putih Tebal & Bayangan Tegas Hitam */
+            /* Efek Stroke Putih Tebal & Bayangan Tegas Hitam (Tanpa Blur) */
             filter: 
                 drop-shadow(0px 4px 0px #000000)
                 drop-shadow(2px 2px 0px #fff) 
@@ -158,7 +158,7 @@
                 <span class="status-emoji">🫠</span>
             </div>
 
-            <div class="bus-container" id="main-jarak-bus">-</div>
+            <div class="bus-container" id="main-jarak-bus">- CM</div>
         </div>
 
         <img src="https://github.com/joanne1chz/exfinpro/blob/main/firebase.png?raw=true" alt="Firebase Menu" class="firebase-menu">
