@@ -89,25 +89,19 @@
         }
 
 
-        /* --- CONTAINER INDIKATOR BUS ULTRASONIK --- */
-        .bus-container {
+        /* --- INDIKATOR JARAK (Kotak Oren) --- */
+        .bus-distance {
             position: absolute;
+            /* Koordinat ini sudah dikunci sesuai kemauanmu */
             top: 65%; 
             left: 62%;
             transform: translate(-50%, -50%);
-            display: flex;
-            align-items: center;
-            /* Memberikan jarak relatif yang pas antara angka CM dan kapsul status hitam */
-            gap: 2vw; 
-            white-space: nowrap;
-        }
-
-        /* Gaya untuk Angka Jarak (Target Kotak Kiri Ultrasonik) */
-        .bus-distance {
+            
             font-family: 'Mobitale Cnd', 'Arial Black', sans-serif;
             font-size: 4.5vw; 
             font-weight: bold;
             color: #000000; 
+            white-space: nowrap;
 
             filter: 
                 drop-shadow(0px 4px 0px #000000)
@@ -121,24 +115,27 @@
                 drop-shadow(0px -2px 0px #fff);
         }
 
-        /* Gaya Keterangan Status Terkoneksi (Target Area Kapsul Hitam) */
+        /* --- STATUS KONEKSI (Kapsul Hitam) --- */
         .bus-status {
+            position: absolute;
+            /* Koordinat dipisah agar presisi masuk ke dalam kapsul hitam */
+            top: 69%; 
+            left: 81%; 
+            transform: translate(-50%, -50%);
+            
             font-family: 'Inter', sans-serif;
             font-weight: 600; /* Semi Bold */
-            font-size: 2.8vw; /* Menyesuaikan ukuran agar presisi di dalam kapsul */
+            font-size: 2.2vw; /* Diperkecil supaya muat di kapsul */
             color: #EAE0CD;
-            text-transform: lowercase; /* Menyamakan format visual 'upcoming' */
+            text-transform: lowercase; 
+            white-space: nowrap;
             
-            /* Efek stroke tipis sesuai instruksi */
+            /* Stroke warna 493A31 yang nggak terlalu tebal */
             filter: 
                 drop-shadow(1px 1px 0px #493A31)
                 drop-shadow(-1px -1px 0px #493A31)
                 drop-shadow(1px -1px 0px #493A31)
                 drop-shadow(-1px 1px 0px #493A31);
-            
-            /* Memberikan sedikit dorongan margin kiri & atas jika posisi kapsul background agak bergeser */
-            margin-left: 2.5vw;
-            margin-top: 0.4vw;
         }
 
 
@@ -184,10 +181,9 @@
                 <span class="status-emoji">🫠</span>
             </div>
 
-            <div class="bus-container">
-                <span class="bus-distance" id="main-jarak-bus">3 CM</span>
-                <span class="bus-status" id="bus-status-text">disconnected</span>
-            </div>
+            <div class="bus-distance" id="main-jarak-bus">- CM</div>
+            
+            <div class="bus-status" id="bus-status-text">disconnected</div>
         </div>
 
         <img src="https://github.com/joanne1chz/exfinpro/blob/main/firebase.png?raw=true" alt="Firebase Menu" class="firebase-menu">
@@ -198,26 +194,24 @@
     </div>
 
     <script>
-        // Fungsi otomatis untuk mengupdate teks logic status berdasarkan nilai jarak ultrasonik
+        // Logika update status mengikuti nilai jarak
         function updateUltrasonicStatus() {
             const distanceElement = document.getElementById('main-jarak-bus');
             const statusElement = document.getElementById('bus-status-text');
             
             if (!distanceElement || !statusElement) return;
 
-            // Mengambil teks mentah (misal: "3 CM" atau "- CM")
             let rawText = distanceElement.innerText.trim().toUpperCase();
 
-            // Jika belum terkoneksi, data kosong, atau mengandung strip "-"
-            if (rawText === "" || rawText === "-" || rawText.includes("-")) {
+            // Jika belum ada angka atau strip
+            if (rawText === "" || rawText === "- CM" || rawText.includes("-")) {
                 statusElement.innerText = "disconnected";
                 return;
             }
 
-            // Mengambil angka saja dari teks (menghilangkan string "CM")
+            // Ekstrak angka
             let distanceValue = parseInt(rawText.replace(/[^0-9]/g, ''));
 
-            // Logika pengecekan nilai sensor ultrasonik
             if (isNaN(distanceValue)) {
                 statusElement.innerText = "disconnected";
             } else if (distanceValue === 0) {
@@ -227,13 +221,7 @@
             }
         }
 
-        // Jalankan fungsi saat halaman pertama kali dimuat
         window.addEventListener('DOMContentLoaded', updateUltrasonicStatus);
-
-        /* TIPS INTEGRASI:
-          Jika nanti kamu mengupdate teks '#main-jarak-bus' secara real-time lewat Firebase script-mu, 
-          panggil kembali fungsi `updateUltrasonicStatus()` tepat setelah nilai jaraknya berubah!
-        */
     </script>
 </body>
 </html>
