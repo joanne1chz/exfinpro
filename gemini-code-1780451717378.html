@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Garden Hidroponik 🌱</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --gold:         #f6ca36;
+            --teal:         #3bb3b0;
+            --pink:         #e44f81;
+            --dark-brown:   #2d2320;
+            --dark-cabinet: #1e1614;
+            --input-teal:   #46b9b7;
+            --btn-green:    #69b964;
+            --text-light:   #ffffff;
+            
+            --success:      #69b964;
+            --danger:       #e44f81;
+            --warning:      #f6ca36;
+            --radius:       24px;
+            --radius-sm:    12px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            background-color: var(--teal);
+            background-image: 
+                linear-gradient(135deg, var(--pink) 25%, transparent 25%),
+                linear-gradient(45deg, var(--gold) 55%, transparent 55%);
+            background-attachment: fixed;
+            color: var(--dark-brown);
+            padding: 24px 16px 48px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== HEADER (Ticktock Arcade Style) ===== */
+        .header {
+            text-align: center;
+            margin-bottom: 36px;
+            background: var(--dark-brown);
+            border: 5px solid var(--dark-cabinet);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: 0 8px 0px rgba(0,0,0,0.15);
+            animation: slideDown .6s ease;
+        }
+        @keyframes slideDown {
+            from { opacity:0; transform:translateY(-20px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+        .header-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--pink); border: 2px solid white;
+            color: white; font-weight: 900; font-size: .8em;
+            padding: 6px 18px; border-radius: 30px; margin-bottom: 12px;
+            letter-spacing: .5px; text-transform: uppercase;
+            font-style: italic;
+        }
+        .header h1 {
+            font-size: 2.8em; font-weight: 900; line-height: 1.1;
+            color: var(--gold);
+            font-style: italic;
+            text-transform: uppercase;
+            text-shadow: 3px 3px 0px var(--dark-cabinet);
+        }
+        .header p { color: #ccb0a7; font-size: .95em; margin-top: 6px; font-weight: 700; font-style: italic; }
+
+        /* ===== STATUS BADGES ===== */
+        .status-wrap {
+            position: fixed; top: 20px; right: 20px;
+            display: flex; flex-direction: column; gap: 8px; z-index: 1000;
+        }
+        .badge {
+            background: var(--dark-brown); 
+            padding: 8px 18px; border-radius: 30px;
+            font-size: 12px; font-weight: 800; font-style: italic;
+            display: flex; align-items: center; gap: 8px;
+            box-shadow: 0 4px 0px rgba(0,0,0,.2);
+            border: 2px solid var(--dark-cabinet);
+            transition: all .3s; color: #a8948e;
+        }
+        .badge.online { color: var(--gold); border-color: var(--gold); background: var(--dark-brown); }
+
+        /* ===== CARDS (Custom Theme Split) ===== */
+        .card {
+            border-radius: var(--radius);
+            box-shadow: 6px 6px 0px var(--dark-brown);
+            padding: 28px;
+            animation: fadeUp .5s ease both;
+        }
+        
+        /* Card 1: Firebase (Dark Style) */
+        .grid-2 > .card:nth-of-type(1) {
+            background: var(--dark-brown);
+            border: 4px solid var(--dark-cabinet);
+            color: white;
+        }
+        
+        /* Card 2: Microbit (Golden Style) */
+        .grid-2 > .card:nth-of-type(2) {
+            background: var(--gold);
+            border: 4px solid var(--dark-brown);
+            color: var(--dark-brown);
+        }
+
+        /* General Charts & Layout Cards */
+        .mb .card {
+            background: white;
+            border: 4px solid var(--dark-brown);
+            color: var(--dark-brown);
+        }
+
+        @keyframes fadeUp {
+            from { opacity:0; transform:translateY(16px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+        .card-title {
+            font-size: 1.1em; font-weight: 900; text-transform: uppercase;
+            font-style: italic;
+            letter-spacing: 1px; margin-bottom: 18px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .grid-2 > .card:nth-of-type(1) .card-title { color: var(--gold); }
+        .grid-2 > .card:nth-of-type(2) .card-title { color: var(--dark-brown); }
+
+        /* ===== LAYOUT GRIDS ===== */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .mb { margin-bottom: 24px; }
+
+        /* ===== SECTION LABEL ===== */
+        .sec-label {
+            font-size: 1.1em; font-weight: 900; text-transform: uppercase; font-style: italic;
+            letter-spacing: 1px; color: var(--dark-brown);
+            display: flex; align-items: center; gap: 8px;
+            margin: 28px 0 14px;
+            text-shadow: 1px 1px 0px white;
+        }
+        .sec-label::after {
+            content: ''; flex: 1; height: 4px;
+            background: var(--dark-brown);
+            border-radius: 2px;
+        }
+
+        /* ===== INPUTS (Teal Retro Fields) ===== */
+        label { display: block; font-weight: 900; font-size: .85em; color: inherit; margin-bottom: 6px; text-transform: uppercase; font-style: italic; }
+        input, select {
+            width: 100%; padding: 12px 15px;
+            border: 3px solid var(--dark-brown);
+            border-radius: var(--radius-sm);
+            font-size: .95em; font-family: 'Nunito', sans-serif;
+            color: white; background: var(--input-teal); outline: none;
+            transition: all .3s; font-weight: 800;
+            margin-bottom: 14px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+        input::placeholder { color: rgba(255, 255, 255, 0.6); }
+        input:focus, select:focus { border-color: white; box-shadow: 0 0 0 4px rgba(255,255,255,0.3); }
+        input[type=password] { font-family: 'Space Mono', monospace; }
+
+        /* ===== BUTTONS (Slanted Arcade Style) ===== */
+        .btn {
+            background: var(--btn-green); color: var(--dark-brown); 
+            border: 3px solid var(--dark-brown);
+            padding: 12px 22px; border-radius: var(--radius-sm);
+            font-weight: 900; font-style: italic; cursor: pointer;
+            font-family: 'Nunito', sans-serif; font-size: 1em;
+            text-transform: uppercase;
+            display: inline-flex; align-items: center; gap: 8px;
+            transition: all .1s ease; white-space: nowrap;
+            box-shadow: 4px 4px 0px var(--dark-brown);
+        }
+        .btn:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--dark-brown); }
+        .btn:disabled { background: #a8948e; cursor: not-allowed; transform: none; box-shadow: none; }
+        
+        #btn-connect-fb {
+            background: var(--teal); color: white;
+            border: 3px solid white;
+            box-shadow: 4px 4px 0px var(--dark-cabinet);
+        }
+        #btn-connect-fb:hover { box-shadow: 2px 2px 0px var(--dark-cabinet); }
+        
+        .btn-dark { background: var(--dark-brown); color: white; border-color: var(--dark-cabinet); }
+        .btn-dark:hover { background: var(--dark-cabinet); }
+        
+        .btn-outline {
+            background: transparent; color: var(--gold);
+            border: 3px solid var(--gold);
+        }
+        .btn-outline:hover { background: var(--gold); color: var(--dark-brown); }
+        .btn-sm { padding: 8px 14px; font-size: .85em; }
+        .btn-full { width: 100%; justify-content: center; margin-top: 12px; }
+
+        /* ===== MODE BANNER ===== */
+        .mode-banner {
+            background: var(--dark-brown);
+            border: 4px solid var(--dark-cabinet);
+            color: white;
+            border-radius: var(--radius); padding: 20px 26px;
+            display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 14px; margin-bottom: 20px;
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.15);
+        }
+        .mode-info h3 { font-size: 1.1em; font-weight: 900; margin-bottom: 2px; font-style: italic; color: var(--gold); }
+        .mode-info p  { font-size: .85em; color: #ccb0a7; font-weight: 600; }
+        .mode-pill {
+            padding: 8px 20px; border-radius: 20px; font-weight: 900; font-style: italic; font-size: .9em;
+            display: flex; align-items: center; gap: 7px;
+            border: 3px solid var(--dark-cabinet);
+        }
+        .mode-pill.auto   { background: var(--btn-green); color: var(--dark-brown); }
+        .mode-pill.manual { background: var(--pink); color: white; }
+
+        /* ===== RETRO SENSOR CARDS ===== */
+        .sensor-big {
+            background: white;
+            border-radius: var(--radius); padding: 26px 24px;
+            border: 4px solid var(--dark-brown);
+            box-shadow: 6px 6px 0px var(--dark-brown);
+            display: flex; flex-direction: column; gap: 6px;
+            position: relative; overflow: hidden;
+            transition: transform .2s;
+        }
+        .sensor-big:hover { transform: translateY(-4px); }
+        .sensor-tag {
+            font-size: .8em; font-weight: 900; text-transform: uppercase; font-style: italic;
+            letter-spacing: 1px; color: #73625c;
+        }
+        .sensor-emoji { font-size: 2.2em; margin: 4px 0; }
+        .sensor-val {
+            font-family: 'Space Mono', monospace;
+            font-size: 3.2em; font-weight: 900; font-style: italic; line-height: 1;
+            color: var(--teal);
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.05);
+        }
+        .sensor-val.teal { color: var(--pink); }
+        .sensor-unit { font-size: .4em; font-weight: 800; color: var(--dark-brown); margin-left: 4px; }
+        .sensor-desc { font-size: .85em; color: var(--dark-brown); font-weight: 800; font-style: italic; margin-top: 2px; }
+        .sensor-bar {
+            height: 10px; background: #e8e2e0; border: 2px solid var(--dark-brown); border-radius: 32px; margin-top: 10px; overflow: hidden;
+        }
+        .sensor-bar-fill {
+            height: 100%; 
+            background: var(--teal);
+            transition: width .5s ease;
+        }
+        .chart-wrap { height: 70px; width: 100%; margin-top: 10px; }
+
+        /* ===== RELAY CARD ===== */
+        .relay-card {
+            background: white;
+            border-radius: var(--radius); padding: 30px 26px;
+            border: 4px solid var(--dark-brown);
+            box-shadow: 6px 6px 0px var(--dark-brown);
+            display: flex; flex-direction: column; align-items: center;
+            gap: 10px; transition: all .3s; position: relative; overflow: hidden;
+        }
+        .relay-card.on {
+            background: var(--gold);
+            box-shadow: 8px 8px 0px var(--dark-brown);
+        }
+        .relay-icon { font-size: 4.2em; transition: all .4s; position: relative; z-index: 1; }
+        .relay-card.on  .relay-icon { filter: drop-shadow(3px 3px 0px var(--dark-brown)); }
+        .relay-card.off .relay-icon { filter: grayscale(.8) opacity(.4); }
+
+        .relay-name { font-weight: 900; font-size: 1.3em; font-style: italic; text-transform: uppercase; }
+        .relay-pin  { font-size: .8em; color: var(--dark-brown); font-weight: 700; text-align: center; }
+        .relay-status {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.8em; font-weight: 900; font-style: italic;
+        }
+        .relay-card.on  .relay-status { color: var(--pink); text-shadow: 1px 1px 0px white; }
+        .relay-card.off .relay-status { color: #a8948e; }
+
+        /* Toggle switch */
+        .toggle-wrap { display: flex; align-items: center; gap: 10px; margin-top: 6px; position: relative; z-index: 1; }
+        .toggle-label { font-size: .9em; font-weight: 900; font-style: italic; }
+        .toggle { position: relative; display: inline-block; width: 64px; height: 34px; }
+        .toggle input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider {
+            position: absolute; cursor: pointer; inset: 0;
+            background: #a8948e; transition: .3s; border-radius: 32px;
+            border: 3px solid var(--dark-brown);
+        }
+        .toggle-slider:before {
+            position: absolute; content: ''; height: 22px; width: 22px;
+            left: 3px; bottom: 3px; background: white;
+            transition: .3s; border-radius: 50%;
+            border: 2px solid var(--dark-brown);
+        }
+        input:checked + .toggle-slider { background: var(--btn-green); }
+        input:checked + .toggle-slider:before { transform: translateX(28px); }
+
+        /* ===== RETRO TERMINAL PANEL ===== */
+        .terminal {
+            background: var(--dark-brown);
+            border-radius: var(--radius); padding: 24px;
+            border: 5px solid var(--dark-cabinet);
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.2);
+        }
+        .terminal-hdr {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;
+        }
+        .terminal-title { color: var(--gold); font-family: 'Space Mono', monospace; font-size: .95em; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--dark-cabinet); }
+        .dot.r { background: var(--pink); } .dot.y { background: var(--gold); } .dot.g { background: var(--btn-green); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+        .log-panel {
+            height: 190px; overflow-y: auto;
+            font-family: 'Space Mono', monospace;
+            background: var(--dark-cabinet); border-radius: 12px; padding: 14px;
+            font-size: 13px; color: #a6f9be;
+            border: 2px solid #3a2f2b;
+        }
+        .log-panel::-webkit-scrollbar { width: 6px; }
+        .log-panel::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 4px; }
+        .log-line { margin-bottom: 4px; line-height: 1.6; }
+        .log-time { color: var(--teal); font-weight: 700; margin-right: 8px; }
+
+        /* ===== ALERT BANNER ===== */
+        .alert-banner {
+            display: none;
+            background: var(--pink);
+            border: 4px solid var(--dark-brown);
+            border-radius: var(--radius);
+            padding: 20px 26px;
+            margin-bottom: 20px;
+            animation: alertPulse 2s ease-in-out infinite;
+            position: relative;
+            color: white;
+        }
+        .alert-banner.show { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+        @keyframes alertPulse {
+            0%,100% { box-shadow: 0 0 0 0 rgba(228,79,129,.5); }
+            50%      { box-shadow: 0 0 0 10px rgba(228,79,129,0); }
+        }
+        .alert-icon { font-size: 2.8em; flex-shrink: 0; animation: shake 1s ease infinite; }
+        @keyframes shake {
+            0%,100%{transform:rotate(0)} 20%{transform:rotate(-8deg)} 40%{transform:rotate(8deg)}
+            60%{transform:rotate(-5deg)} 80%{transform:rotate(5deg)}
+        }
+        .alert-body h3 { font-size: 1.2em; font-weight: 900; font-style: italic; color: var(--gold); margin-bottom: 4px; text-transform: uppercase; }
+        .alert-body p  { font-size: .9em; color: white; font-weight: 700; line-height: 1.5; }
+        .alert-badge {
+            margin-left: auto; background: var(--dark-brown); color: var(--gold);
+            padding: 8px 18px; border-radius: 20px; font-weight: 900; font-style: italic; font-size: .85em;
+            white-space: nowrap; flex-shrink: 0;
+            border: 2px solid var(--dark-cabinet);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .header h1 { font-size: 2em; }
+            .status-wrap { transform: scale(.8); transform-origin: top right; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="status-wrap">
+    <div class="badge" id="status-bt"><i class="fab fa-bluetooth-b"></i> BT Offline</div>
+    <div class="badge" id="status-fb"><i class="fas fa-cloud"></i> DB Offline</div>
+</div>
+
+<div class="wrapper">
+
+    <div class="header">
+        <div class="header-badge"><i class="fas fa-seedling"></i> v2.0 · Micro:bit</div>
+        <h1>🌱 Smart Garden Hidroponik</h1>
+        <p>Monitoring & Kontrol Otomatis · Firebase + Bluetooth BLE</p>
+    </div>
+
+    <div class="grid-2 mb">
+        <div class="card" style="animation-delay:.1s">
+            <div class="card-title"><i class="fas fa-cloud"></i> Firebase Cloud Sync</div>
+            <label>API Key</label>
+            <input type="password" id="fb-apiKey" placeholder="AIzaSy...">
+            <label>Database URL</label>
+            <input type="text" id="fb-dbUrl" placeholder="https://project-rtdb.firebaseio.com">
+            <label>Node Path</label>
+            <input type="text" id="fb-path" value="smarthome/ruangan1">
+            <button class="btn btn-full" id="btn-connect-fb">
+                <i class="fas fa-link"></i> Hubungkan Firebase
+            </button>
+        </div>
+
+        <div class="card" style="animation-delay:.2s">
+            <div class="card-title"><i class="fas fa-microchip"></i> Micro:bit Bluetooth</div>
+            <p style="font-size:.85em; line-height:1.75; margin-bottom:18px; font-weight: 700;">
+                Pastikan Micro:bit menyala dan ekstensi <strong>Bluetooth UART</strong> aktif di MakeCode.<br>
+                📥 RX dari Micro:bit: <code style="color:var(--pink); background:rgba(0,0,0,0.1); padding:2px 6px; border-radius:4px;">key,value</code><br>
+                📤 TX ke Micro:bit: <code style="color:var(--dark-brown); background:rgba(0,0,0,0.1); padding:2px 6px; border-radius:4px;">key,value↵</code>
+            </p>
+            <div style="display:flex; gap:12px; flex-direction:column;">
+                <button class="btn" id="btn-connect-ble">
+                    <i class="fab fa-bluetooth"></i> Connect Micro:bit
+                </button>
+                <button class="btn btn-dark" id="btn-disconnect-ble" disabled>
+                    <i class="fas fa-times"></i> Disconnect
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="mode-banner" id="modeBanner">
+        <div class="mode-info">
+            <h3>🤖 Mode Sistem</h3>
+            <p>Otomatis: relay dikontrol sensor jarak. Manual: kontrol relay lewat toggle.</p>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+            <div class="mode-pill auto" id="modePill">
+                <i class="fas fa-robot"></i> OTOMATIS
+            </div>
+            <button class="btn btn-sm btn-dark" id="btnToggleMode">
+                <i class="fas fa-hand-paper"></i> Ke Mode Manual
+            </button>
+        </div>
+    </div>
+
+    <div class="alert-banner" id="alertEmber">
+        <div class="alert-icon">⚠️</div>
+        <div class="alert-body">
+            <h3>🪣 Air Ember Hampir Habis!</h3>
+            <p>Jarak sensor ember &gt; 30 cm — level air terlalu rendah.<br>
+               Segera lakukan <strong>mixing manual</strong> atau isi ulang ember nutrisi.</p>
+        </div>
+        <div class="alert-badge">⚡ Mixing Manual!</div>
+    </div>
+
+    <div class="sec-label"><i class="fas fa-satellite-dish"></i> Live Sensor Data</div>
+    <div class="grid-2 mb" style="gap:20px;">
+
+        <div class="sensor-big" style="animation-delay:.15s">
+            <div class="sensor-tag">📡 Ultrasonik 1 · P0 / P1</div>
+            <div class="sensor-emoji">💧</div>
+            <div class="sensor-val" id="val-jarak">
+                --<span class="sensor-unit">cm</span>
+            </div>
+            <div class="sensor-desc">Pompa Relay ON jika jarak ≥ 30 cm</div>
+            <div class="sensor-bar">
+                <div class="sensor-bar-fill" id="bar-jarak" style="width:0%"></div>
+            </div>
+            <div class="chart-wrap"><canvas id="chart-jarak"></canvas></div>
+        </div>
+
+        <div class="sensor-big" style="animation-delay:.25s" id="card-ember">
+            <div class="sensor-tag">🌊 Ultrasonik 2 · P3 / P8 · Ember</div>
+            <div class="sensor-emoji" id="ember-emoji">🌊</div>
+            <div class="sensor-val teal" id="val-jarak-manual">
+                --<span class="sensor-unit">cm</span>
+            </div>
+            <div class="sensor-desc">Monitoring level air ember · tidak kontrol aktuator</div>
+            <div class="sensor-bar">
+                <div class="sensor-bar-fill" id="bar-jarak-manual" style="width:0%; background: var(--pink)"></div>
+            </div>
+            <div class="chart-wrap"><canvas id="chart-jarak-manual"></canvas></div>
+        </div>
+    </div>
+
+    <div class="sec-label"><i class="fas fa-bolt"></i> Aktuator</div>
+    <div style="max-width: 340px; margin: 0 auto 28px;">
+        <div class="relay-card off" id="card-relay">
+            <div class="relay-glow"></div>
+            <div class="relay-icon" id="icon-relay">⚡</div>
+            <div class="relay-name">Relay</div>
+            <div class="relay-pin">📌 Pin P13 · Untuk mengontrol nyala dan matinya pompa</div>
+            <div class="relay-status" id="lbl-relay">OFF</div>
+            <div class="toggle-wrap" id="manual-relay" style="display:none;">
+                <span class="toggle-label">Manual:</span>
+                <label class="toggle">
+                    <input type="checkbox" id="sw-relay" onchange="window.toggleRelay(this.checked)">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="sec-label"><i class="fas fa-chart-line"></i> Grafik Riwayat</div>
+    <div class="grid-2 mb">
+        <div class="card" style="animation-delay:.3s; padding:20px;">
+            <div class="card-title" style="color: var(--teal);"><i class="fas fa-ruler"></i> Jarak (cm)</div>
+            <div style="height:120px;"><canvas id="chart-jarak-big"></canvas></div>
+        </div>
+        <div class="card" style="animation-delay:.4s; padding:20px;">
+            <div class="card-title" style="color:var(--pink)"><i class="fas fa-ruler-combined"></i> Jarak Manual (cm)</div>
+            <div style="height:120px;"><canvas id="chart-jarak-manual-big"></canvas></div>
+        </div>
+    </div>
+
+    <div class="terminal">
+        <div class="terminal-hdr">
+            <div class="terminal-title">
+                <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+                <span>system_terminal — smartgarden@microbit</span>
+            </div>
+            <button class="btn btn-sm btn-outline" id="btnClearLog" style="font-size:.75em;">
+                <i class="fas fa-trash"></i> Clear
+            </button>
+        </div>
+        <div id="terminalLog" class="log-panel"></div>
+    </div>
+
+</div><script type="module">
+import { initializeApp, getApps, deleteApp }     from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getDatabase, ref, onValue, update, set } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+
+// =====================================================================
+// STATE
+// =====================================================================
+const state = {
+    db: null, path: "", unsub: null, data: {},
+    device: null, txChar: null, rxChar: null,
+    bleConnected: false, bleBuffer: "",
+    modeOtomatis: 1,   // 1 = otomatis, 0 = manual
+    charts: {},
+    history: {
+        jarak:        { labels: [], data: [] },
+        jarak_manual: { labels: [], data: [] }
+    }
+};
+
+const MAX_PTS = 30;
+const $ = id => document.getElementById(id);
+
+// =====================================================================
+// LOGGER
+// =====================================================================
+function log(msg, color = "#a6f9be") {
+    const t = new Date().toLocaleTimeString('id-ID', { hour12: false });
+    $('terminalLog').insertAdjacentHTML('afterbegin',
+        `<div class="log-line"><span class="log-time">[${t}]</span><span style="color:${color}"> ${msg}</span></div>`);
+}
+
+// =====================================================================
+// STATUS
+// =====================================================================
+function updateBTStatus() {
+    $('btn-connect-ble').disabled    = state.bleConnected;
+    $('btn-disconnect-ble').disabled = !state.bleConnected;
+    const b = $('status-bt');
+    b.innerHTML = state.bleConnected
+        ? '<i class="fab fa-bluetooth-b"></i> BT Connected'
+        : '<i class="fab fa-bluetooth-b"></i> BT Offline';
+    b.className = 'badge' + (state.bleConnected ? ' online' : '');
+}
+function updateDBStatus(ok) {
+    const b = $('status-fb');
+    b.innerHTML = ok
+        ? '<i class="fas fa-cloud"></i> DB Synced'
+        : '<i class="fas fa-cloud"></i> DB Offline';
+    b.className = 'badge' + (ok ? ' online' : '');
+}
+
+// =====================================================================
+// MODE OTOMATIS / MANUAL
+// (sesuai logika MakeCode: BT received "mode" → set mode_otomatis)
+// =====================================================================
+function applyMode(isAuto) {
+    state.modeOtomatis = isAuto ? 1 : 0;
+    const pill   = $('modePill');
+    const btnTgl = $('btnToggleMode');
+
+    if (isAuto) {
+        pill.className = 'mode-pill auto';
+        pill.innerHTML = '<i class="fas fa-robot"></i> OTOMATIS';
+        btnTgl.innerHTML = '<i class="fas fa-hand-paper"></i> Ke Mode Manual';
+        $('manual-relay').style.display = 'none';
+    } else {
+        pill.className = 'mode-pill manual';
+        pill.innerHTML = '<i class="fas fa-hand-paper"></i> MANUAL';
+        btnTgl.innerHTML = '<i class="fas fa-robot"></i> Ke Mode Otomatis';
+        $('manual-relay').style.display = 'flex';
+    }
+
+    sendBLE("mode", isAuto ? 1 : 0);
+    if (state.db) update(ref(state.db, `${state.path}/mode`), { value: isAuto ? 1 : 0 });
+    log(`Mode → ${isAuto ? 'OTOMATIS' : 'MANUAL'}`, isAuto ? '#69b964' : '#f6ca36');
+}
+
+$('btnToggleMode').onclick = () => applyMode(state.modeOtomatis === 0);
+
+// =====================================================================
+// RELAY UI
+// =====================================================================
+function updateRelayUI(isOn) {
+    const card = $('card-relay');
+    const sw   = $('sw-relay');
+    card.className = `relay-card ${isOn ? 'on' : 'off'}`;
+    $('lbl-relay').textContent = isOn ? 'ON ✓' : 'OFF';
+    if (sw && document.activeElement !== sw) sw.checked = isOn;
+}
+
+// =====================================================================
+// SENSOR UI
+// =====================================================================
+function updateSensorUI(key, val) {
+    const elId = key === 'jarak_manual' ? 'val-jarak-manual' : `val-${key}`;
+    const barId = key === 'jarak_manual' ? 'bar-jarak-manual' : `bar-${key}`;
+    const el = $(elId);
+    if (!el) return;
+
+    let numSpan = el.querySelector('.num');
+    if (!numSpan) {
+        el.innerHTML = `<span class="num">${val}</span><span class="sensor-unit">cm</span>`;
+    } else {
+        numSpan.textContent = val;
+    }
+
+    const bar = $(barId);
+    if (bar) bar.style.width = Math.min(100, (val / 150) * 100) + '%';
+
+    // Cek level air ember (ultrasonik 2 / jarak_manual)
+    // jarak > 30 → air hampir habis → tampilkan alert
+    if (key === 'jarak_manual') {
+        const alert = $('alertEmber');
+        const emoji = $('ember-emoji');
+        const card  = $('card-ember');
+        if (val > 30) {
+            alert.classList.add('show');
+            if (emoji) emoji.textContent = '🚨';
+            if (card)  card.style.borderColor = 'var(--pink)';
+        } else {
+            alert.classList.remove('show');
+            if (emoji) emoji.textContent = '🪣';
+            if (card)  card.style.borderColor = '';
+        }
+    }
+}
+
+// =====================================================================
+// BLUETOOTH
+// =====================================================================
+const SVC = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+const TX  = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
+const RX  = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
+
+async function connectBLE() {
+    try {
+        if (!navigator.bluetooth) throw new Error("Browser tidak mendukung Web Bluetooth.");
+        log("Scanning Micro:bit...", "#f6ca36");
+        state.device = await navigator.bluetooth.requestDevice({
+            filters: [{ namePrefix: "BBC micro:bit" }],
+            optionalServices: [SVC]
+        });
+        state.device.addEventListener("gattserverdisconnected", () => {
+            state.bleConnected = false; updateBTStatus();
+            log("BLE Terputus!", "#e44f81");
+        });
+        const server  = await state.device.gatt.connect();
+        const service = await server.getPrimaryService(SVC);
+        state.txChar  = await service.getCharacteristic(TX);
+        state.rxChar  = await service.getCharacteristic(RX);
+        await state.txChar.startNotifications();
+        state.txChar.addEventListener("characteristicvaluechanged", onBLEData);
+        state.bleConnected = true; updateBTStatus();
+        log(`✓ Terhubung: ${state.device.name}`, "#69b964");
+    } catch (e) { log(`BLE Error: ${e.message}`, "#e44f81"); }
+}
+
+function onBLEData(event) {
+    let arr = [];
+    for (let i = 0; i < event.target.value.byteLength; i++)
+        arr.push(event.target.value.getUint8(i));
+    state.bleBuffer += String.fromCharCode.apply(null, arr);
+    const lines = state.bleBuffer.split('\n');
+    state.bleBuffer = lines.pop() || "";
+    lines.forEach(line => { const t = line.trim(); if (t) processBLELine(t); });
+}
+
+// =====================================================================
+// PROSES DATA DARI MICRO:BIT
+// Format: "key,value"  ← sesuai fungsi kirim di MakeCode
+// Key yang dikenal: jarak, jarak_manual, Relay, mode
+// =====================================================================
+function processBLELine(txt) {
+    log(`RX ← ${txt}`, "#f6ca36");
+    if (!txt.includes(',')) return;
+
+    const idx = txt.indexOf(',');
+    const key = txt.substring(0, idx).trim();
+    const val = parseFloat(txt.substring(idx + 1).trim());
+    if (isNaN(val)) return;
+
+    // mode
+    if (key === "mode") {
+        applyMode(val === 1);
+        return;
+    }
+
+    // Relay status
+    if (key === "Relay") {
+        updateRelayUI(val === 1);
+        if (state.db) update(ref(state.db, `${state.path}/relay`), { value: val, tipe: 'switch' });
+        return;
+    }
+
+    // jarak (sensor utama → kontrol relay di mode otomatis)
+    if (key === "jarak") {
+        updateSensorUI("jarak", val);
+        pushHistory("jarak", val);
+        if (state.db) update(ref(state.db, `${state.path}/jarak`), { value: val, tipe: 'sensor', satuan: 'cm' });
+        return;
+    }
+
+    // jarak_manual (feedback only, no actuator)
+    if (key === "jarak_manual") {
+        updateSensorUI("jarak_manual", val);
+        pushHistory("jarak_manual", val);
+        if (state.db) update(ref(state.db, `${state.path}/jarak_manual`), { value: val, tipe: 'sensor', satuan: 'cm' });
+        return;
+    }
+}
+
+// TX ke Micro:bit: "key,value\n" (sesuai format MakeCode received)
+async function sendBLE(key, val) {
+    if (!state.rxChar) return;
+    const payload = `${key},${val}\n`;
+    try {
+        await state.rxChar.writeValue(new TextEncoder().encode(payload));
+        log(`TX → ${payload.trim()}`, "#f6ca36");
+    } catch (e) { log(`TX Error: ${e.message}`, "#e44f81"); }
+}
+
+// =====================================================================
+// TOGGLE RELAY (manual mode only)
+// Sesuai MakeCode: BT received "Relay" → set mode_otomatis=0, write P13, set status_lampu1
+// =====================================================================
+window.toggleRelay = (isChecked) => {
+    if (state.modeOtomatis === 1) return;
+    const val = isChecked ? 1 : 0;
+    updateRelayUI(isChecked);
+    sendBLE("Relay", val);
+    if (state.db) update(ref(state.db, `${state.path}/relay`), { value: val });
+    log(`Relay → ${isChecked ? 'ON' : 'OFF'}`, "#f6ca36");
+};
+
+// =====================================================================
+// FIREBASE
+// =====================================================================
+async function connectFirebase() {
+    const apiKey = $('fb-apiKey').value.trim();
+    const dbUrl  = $('fb-dbUrl').value.trim();
+    const path   = $('fb-path').value.trim() || "smarthome/ruangan1";
+    if (!apiKey || !dbUrl) { alert("Isi API Key dan Database URL!"); return; }
+
+    try {
+        const apps = getApps();
+        if (apps.length > 0) await deleteApp(apps[0]);
+        if (state.unsub) state.unsub();
+
+        const app = initializeApp({
+            apiKey, databaseURL: dbUrl,
+            projectId: dbUrl.replace("https://","").split(".")[0]
+        });
+        state.db   = getDatabase(app);
+        state.path = path;
+        log(`Menghubungkan → /${path}`, "#f6ca36");
+
+        const initData = {
+            jarak:        { tipe: 'sensor', value: 0, satuan: 'cm' },
+            jarak_manual: { tipe: 'sensor', value: 0, satuan: 'cm' },
+            relay:        { tipe: 'switch', value: 0 },
+            mode:         { tipe: 'switch', value: 1 }
+        };
+
+        state.unsub = onValue(ref(state.db, path), (snap) => {
+            const d = snap.val();
+            if (!d) { set(ref(state.db, path), initData); return; }
+            state.data = d;
+            updateDBStatus(true);
+
+            if (d.jarak)        updateSensorUI("jarak",        d.jarak.value ?? 0);
+            if (d.jarak_manual) updateSensorUI("jarak_manual", d.jarak_manual.value ?? 0);
+            if (d.relay)        updateRelayUI((d.relay.value ?? 0) === 1);
+            if (d.mode)         applyMode((d.mode.value ?? 1) === 1);
+        }, err => { log(`DB Error: ${err.message}`, "#e44f81"); updateDBStatus(false); });
+
+        log(`✓ Firebase OK: /${path}`, "#69b964");
+        localStorage.setItem('smarthome_cfg', JSON.stringify({ apiKey, dbUrl, path }));
+    } catch (e) { log(`DB Error: ${e.message}`, "#e44f81"); updateDBStatus(false); }
+}
+
+// =====================================================================
+// CHARTS
+// =====================================================================
+const CHART_CFG = {
+    jarak:        { color: '#3bb3b0', label: 'Jarak' },
+    jarak_manual: { color: '#e44f81', label: 'Jarak Manual' }
+};
+
+function makeChart(canvasId, key, height = 90) {
+    const canvas = $(canvasId);
+    if (!canvas) return null;
+    if (state.charts[canvasId]) state.charts[canvasId].destroy();
+
+    const ctx   = canvas.getContext('2d');
+    const color = CHART_CFG[key].color;
+    const grad  = ctx.createLinearGradient(0, 0, 0, height);
+    grad.addColorStop(0, color + '55');
+    grad.addColorStop(1, color + '00');
+
+    return new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels:   state.history[key].labels,
+            datasets: [{ data: state.history[key].data, borderColor: color, backgroundColor: grad, borderWidth: 3, pointRadius: 0, fill: true, tension: 0.4 }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false }, tooltip: { enabled: false } },
+            scales: { y: { display: false }, x: { display: false } },
+            animation: { duration: 200 }
+        }
+    });
+}
+
+function initCharts() {
+    state.charts['chart-jarak']         = makeChart('chart-jarak', 'jarak', 70);
+    state.charts['chart-jarak-manual']  = makeChart('chart-jarak-manual', 'jarak_manual', 70);
+    state.charts['chart-jarak-big']     = makeChart('chart-jarak-big', 'jarak', 120);
+    state.charts['chart-jarak-manual-big'] = makeChart('chart-jarak-manual-big', 'jarak_manual', 120);
+}
+
+function pushHistory(key, val) {
+    const h = state.history[key];
+    if (!h) return;
+    h.labels.push(new Date().toLocaleTimeString('id-ID', { hour12: false }));
+    h.data.push(parseFloat(val) || 0);
+    if (h.labels.length > MAX_PTS) { h.labels.shift(); h.data.shift(); }
+
+    // Update both charts for this key
+    [`chart-${key === 'jarak_manual' ? 'jarak-manual' : key}`,
+     `chart-${key === 'jarak_manual' ? 'jarak-manual' : key}-big`].forEach(id => {
+        const ch = state.charts[id];
+        if (!ch) return;
+        ch.data.labels           = h.labels;
+        ch.data.datasets[0].data = h.data;
+        ch.update('none');
+    });
+}
+
+// =====================================================================
+// INIT
+// =====================================================================
+$('btn-connect-ble').onclick    = connectBLE;
+$('btn-disconnect-ble').onclick = () => { if (state.device) state.device.gatt.disconnect(); };
+$('btn-connect-fb').onclick     = connectFirebase;
+$('btnClearLog').onclick        = () => $('terminalLog').innerHTML = '';
+
+window.onload = () => {
+    initCharts();
+    applyMode(true);
+    const saved = JSON.parse(localStorage.getItem('smarthome_cfg') || '{}');
+    if (saved.apiKey) {
+        $('fb-apiKey').value = saved.apiKey;
+        $('fb-dbUrl').value  = saved.dbUrl;
+        $('fb-path').value   = saved.path || "smarthome/ruangan1";
+    }
+    log("✓ Smart Garden Hidroponik siap — hubungkan Firebase & Micro:bit 🌱", "#69b964");
+};
+</script>
+</body>
+</html>
