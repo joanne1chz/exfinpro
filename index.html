@@ -12,7 +12,6 @@
         }
 
         body {
-            /* Warna background dasar sesuai permintaanmu */
             background-color: #57BCB6; 
             overflow-y: auto; 
             overflow-x: hidden;
@@ -20,17 +19,12 @@
 
         .landing-container {
             width: 100vw;
-            /* Kita paksa tingginya menjadi 180% dari lebar layar agar pas dengan rasio gambar yang panjang */
-            height: 180vw; 
+            /* Diubah ke 175vw agar pas mentok di batas pink bawah tanpa kelebihan scroll */
+            height: 175vw; 
             
-            /* Memasukkan aset gambar */
             background-image: url('https://github.com/joanne1chz/exfinpro/blob/main/Bg.png?raw=true');
             background-repeat: no-repeat;
-            
-            /* Posisi dimulai dari paling atas */
             background-position: top center; 
-            
-            /* Gambar diatur agar selalu selebar layar (100%) dan memanjang ke bawah otomatis */
             background-size: 100% auto; 
         }
     </style>
