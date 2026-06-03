@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Landing Page - Ticktock Golden</title>
     <style>
-        /* Impor font Mobitale Cnd (atau font sans-serif tebal sebagai fallback jika lokal) */
+        /* Impor font Mobitale Cnd */
         @font-face {
             font-family: 'Mobitale Cnd';
             src: local('Mobitale Cnd'), local('Mobitale-Cnd');
@@ -49,27 +49,32 @@
             display: block;
         }
 
-        /* --- TEKS STATUS KIPAS (Di Atas Kotak Biru Muda) --- */
-        .status-kipas {
+        /* --- CONTAINER UTAMA TEKS STATUS (Diturunkan agar pas masuk kotak biru) --- */
+        .status-container {
             position: absolute;
-            /* Koordinat agar pas di tengah kotak biru muda pada Main.png */
-            top: 36%; 
+            /* Mengubah top dari 36% ke 42% agar posisinya turun ke dalam kotak biru */
+            top: 42%; 
             left: 71%;
             transform: translate(-50%, -50%);
             
-            /* Font & Ukuran proporsional */
+            display: flex;
+            align-items: center;
+            gap: 1vw; 
+            
             font-family: 'Mobitale Cnd', 'Arial Black', sans-serif;
             font-size: 4.5vw; 
             font-weight: bold;
-            text-transform: uppercase;
             white-space: nowrap;
+        }
 
-            /* Efek Gradasi Teks (Atas: #75D6FF ke Bawah: #0783B7) */
+        /* --- GAYA KHUSUS TEKS HURUF (Gradasi + Stroke + Shadow) --- */
+        .status-text {
+            text-transform: uppercase;
             background: linear-gradient(to bottom, #75D6FF, #0783B7);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
 
-            /* Efek Stroke Putih di Luar + Drop Shadow Tegas #0269B9 (Tanpa Blur) */
+            /* Efek Stroke Putih & Bayangan Tegas Biru */
             filter: 
                 drop-shadow(0px 4px 0px #0269B9)
                 drop-shadow(2px 2px 0px #fff) 
@@ -80,6 +85,13 @@
                 drop-shadow(-2px 0px 0px #fff)
                 drop-shadow(0px 2px 0px #fff)
                 drop-shadow(0px -2px 0px #fff);
+        }
+
+        /* --- GAYA KHUSUS EMOJI (Warna Asli) --- */
+        .status-emoji {
+            -webkit-text-fill-color: initial; 
+            background: none;
+            filter: drop-shadow(0px 3px 0px #0269B9);
         }
 
         /* --- ASSET LAIN (Firebase, Microbit, Terminal) --- */
@@ -119,7 +131,10 @@
         <div class="main-menu-wrapper">
             <img src="https://github.com/joanne1chz/exfinpro/blob/main/Main.png?raw=true" alt="Main Menu" class="main-menu-img">
             
-            <div class="status-kipas" id="main-status-kipas">OFF 🫠</div>
+            <div class="status-container" id="main-status-kipas">
+                <span class="status-text">OFF</span>
+                <span class="status-emoji">🫠</span>
+            </div>
         </div>
 
         <img src="https://github.com/joanne1chz/exfinpro/blob/main/firebase.png?raw=true" alt="Firebase Menu" class="firebase-menu">
