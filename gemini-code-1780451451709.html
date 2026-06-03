@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticktock Golden Project</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial Black', 'Impact', sans-serif;
+        }
+
+        body {
+            background-color: #55b9c4;
+            /* Pola background garis miring kuning besar sesuai gambar */
+            background-image: linear-gradient(115deg, #f7d24c 35%, transparent 35%),
+                              linear-gradient(295deg, #f7d24c 35%, transparent 35%);
+            background-size: 100% 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .phone-wrapper {
+            width: 410px;
+            background: transparent;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        /* --- SECTION 1: TOP (MASCOT & BOARD) --- */
+        .top-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 10px;
+        }
+
+        /* Replika Karakter Burung/Robot */
+        .mascot-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin-bottom: 10px;
+        }
+
+        .mascot-body {
+            width: 120px;
+            height: 120px;
+            background: #505c66;
+            border: 4px solid #1a1a1a;
+            border-radius: 50% 50% 45% 45%;
+            position: absolute;
+            bottom: 0;
+            left: 10px;
+            box-shadow: inset 0 -15px 0 #cbd3db;
+        }
+
+        .mascot-body::before { /* Pipi pink/putih */
+            content: "";
+            position: absolute;
+            bottom: 12px; left: 12px; right: 12px; height: 50px;
+            background: #fff3e3;
+            border-radius: 50% 50% 40% 40%;
+        }
+
+        .mascot-body::after { /* Paruh emas */
+            content: "";
+            position: absolute;
+            bottom: 45px; left: 48px;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-top: 14px solid #f9ca24;
+        }
+
+        .earmuffs {
+            position: absolute;
+            width: 144px;
+            height: 60px;
+            border: 14px solid #2c3e50;
+            border-bottom: none;
+            border-radius: 70px 70px 0 0;
+            top: 20px; left: -2px;
+        }
+
+        /* Papan Utama Cokelat */
+        .main-board {
+            background: #473322;
+            border: 4px solid #1c140e;
+            border-radius: 24px;
+            padding: 14px;
+            width: 235px;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.15);
+        }
+
+        .board-title {
+            font-style: italic;
+            text-align: center;
+            font-size: 17px;
+            color: #f7d24c;
+            text-shadow: 2px 2px 0px #000;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-bar {
+            background: #53b4bc;
+            border: 4px solid #1c140e;
+            border-radius: 10px;
+            display: flex;
+            overflow: hidden;
+            margin-bottom: 8px;
+            height: 48px;
+        }
+
+        .status-left {
+            flex: 1;
+            background: #53b4bc;
+            /* Efek garis hiasan putih di dalam kotak status */
+            background-image: linear-gradient(45deg, transparent 45%, #fff 45%, #fff 55%, transparent 55%);
+            background-size: 20px 20px;
+            opacity: 0.7;
+        }
+
+        .status-right {
+            background: white;
+            color: #0f75bc;
+            padding: 0 12px;
+            font-size: 24px;
+            font-style: italic;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            border-left: 4px solid #1c140e;
+            min-width: 95px;
+        }
+
+        .cm-bar {
+            background: #f19066;
+            border: 4px solid #1c140e;
+            border-radius: 10px;
+            padding: 6px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #1c140e;
+            font-style: italic;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .upcoming-tag {
+            background: #1c140e;
+            color: white;
+            font-size: 9px;
+            font-style: normal;
+            padding: 2px 5px;
+            border-radius: 4px;
+            text-transform: lowercase;
+        }
+
+        .date-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1.2fr;
+            gap: 6px;
+        }
+
+        .date-box {
+            background: white;
+            border: 4px solid #1c140e;
+            border-radius: 8px;
+            color: #1c140e;
+            text-align: center;
+            padding: 4px 2px;
+            font-size: 15px;
+            font-style: italic;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .date-box .day-text {
+            font-size: 10px;
+            font-style: italic;
+            text-transform: capitalize;
+            line-height: 11px;
+        }
+
+        /* --- SECTION 2: MIDDLE (FIREBASE & BLUETOOTH) --- */
+        .mid-section {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 14px;
+        }
+
+        /* Firebase Panel */
+        .firebase-panel {
+            background: #3e3a39;
+            border: 4px solid #1a1a1a;
+            border-radius: 20px;
+            padding: 14px;
+            /* Pola Papan Catur Transparan Sesuai Gambar */
+            background-image: linear-gradient(45deg, #353130 25%, transparent 25%), 
+                              linear-gradient(-45deg, #353130 25%, transparent 25%), 
+                              linear-gradient(45deg, transparent 75%, #353130 75%), 
+                              linear-gradient(-45deg, transparent 75%, #353130 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+
+        .panel-title {
+            font-style: italic;
+            font-size: 17px;
+            margin-bottom: 12px;
+            color: #ffffff;
+            text-shadow: 2px 2px 0px #000;
+        }
+
+        .input-box {
+            margin-bottom: 8px;
+        }
+
+        .input-box label {
+            display: block;
+            font-size: 9px;
+            color: #ffffff;
+            margin-bottom: 2px;
+            font-family: sans-serif;
+            font-weight: bold;
+        }
+
+        .input-box input {
+            width: 100%;
+            background: #53b4bc;
+            border: 3px solid #1a1a1a;
+            border-radius: 8px;
+            padding: 7px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .btn-connect {
+            background: #53b4bc;
+            border: 3px solid #1a1a1a;
+            border-radius: 8px;
+            padding: 4px 14px;
+            color: white;
+            font-style: italic;
+            font-size: 13px;
+            cursor: pointer;
+            margin-top: 4px;
+        }
+
+        /* Bluetooth Panel */
+        .bluetooth-panel {
+            background: #fbc531;
+            border: 4px solid #1a1a1a;
+            border-radius: 20px;
+            padding: 16px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .bt-title {
+            font-style: italic;
+            color: #1a1a1a;
+            font-size: 15px;
+            text-align: center;
+        }
+
+        .btn-bt {
+            width: 100%;
+            padding: 10px 4px;
+            border: 3px solid #1a1a1a;
+            border-radius: 8px;
+            font-size: 13px;
+            font-style: italic;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            position: relative;
+        }
+
+        /* Efek Petir Hitam Tajam di Tombol Bluetooth */
+        .btn-bt::after {
+            content: "";
+            position: absolute;
+            top: -3px; left: 35%; width: 25px; height: 120%;
+            background: #1a1a1a;
+            transform: skewX(-35deg);
+            clip-path: polygon(0% 0%, 100% 0%, 60% 45%, 100% 45%, 30% 100%, 50% 55%, 0% 55%);
+        }
+
+        .btn-connect-bt {
+            background: #e1b12c;
+            color: #1a1a1a;
+            box-shadow: 0 4px 0 #1a1a1a;
+        }
+
+        .btn-disconnect-bt {
+            background: #a2c867;
+            color: #1a1a1a;
+            box-shadow: 0 4px 0 #1a1a1a;
+        }
+
+        /* --- SECTION 3: BOTTOM (SYSTEM TERMINAL) --- */
+        .terminal-box {
+            background: #3e3a39;
+            border: 4px solid #1a1a1a;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+        }
+
+        .terminal-top {
+            background: #24201f;
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border-bottom: 3px solid #1a1a1a;
+        }
+
+        .circle {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        .c-red { background: #ff5f56; }
+        .c-yellow { background: #ffbd2e; }
+        .c-green { background: #27c93f; }
+
+        .terminal-name {
+            color: #a2c867;
+            font-size: 11px;
+            font-family: monospace;
+            margin-left: 6px;
+            font-weight: bold;
+        }
+
+        .terminal-screen {
+            background: #000000;
+            height: 135px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-wrapper">
+        
+        <div class="top-section">
+            <div class="mascot-container">
+                <div class="earmuffs"></div>
+                <div class="mascot-body"></div>
+            </div>
+
+            <div class="main-board">
+                <div class="board-title">Ticktock Golden Project</div>
+                
+                <div class="status-bar">
+                    <div class="status-left"></div>
+                    <div class="status-right">On 🥶</div>
+                </div>
+
+                <div class="cm-bar">
+                    <span>3 CM</span>
+                    <span class="upcoming-tag">upcoming</span>
+                </div>
+
+                <div class="date-grid">
+                    <div class="date-box">10.53</div>
+                    <div class="date-box">32 C</div>
+                    <div class="date-box">
+                        <span class="day-text">Tuesday</span>
+                        <span style="font-size: 11px; font-weight: bold; letter-spacing: -0.5px;">26/5/26</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mid-section">
+            <div class="firebase-panel">
+                <div class="panel-title">Firebase Cloud Sync</div>
+                
+                <div class="input-box">
+                    <label>Api Key</label>
+                    <input type="text" disabled>
+                </div>
+                
+                <div class="input-box">
+                    <label>Database URL</label>
+                    <input type="text" disabled>
+                </div>
+                
+                <div class="input-box">
+                    <label>Node Path</label>
+                    <input type="text" disabled>
+                </div>
+
+                <button class="btn-connect">Connect</button>
+            </div>
+
+            <div class="bluetooth-panel">
+                <div class="bt-title">Micro:bit Bluetooth</div>
+                <button class="btn-bt btn-connect-bt">Connect Microbit</button>
+                <button class="btn-bt btn-disconnect-bt">Disconnect</button>
+            </div>
+        </div>
+
+        <div class="terminal-box">
+            <div class="terminal-top">
+                <div class="circle c-red"></div>
+                <div class="circle c-yellow"></div>
+                <div class="circle c-green"></div>
+                <div class="terminal-name">System_terminal</div>
+            </div>
+            <div class="terminal-screen"></div>
+        </div>
+
+    </div>
+
+</body>
+</html>
