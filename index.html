@@ -37,7 +37,7 @@
             z-index: 10;
         }
 
-        /* --- FIREBASE MENU (Pojok Kiri Bawah) --- */
+        /* --- FIREBASE MENU (Pojok Kiri Tengah) --- */
         .firebase-menu {
             position: absolute;
             top: 68vw; 
@@ -47,15 +47,26 @@
             z-index: 10;
         }
 
-        /* --- MICROBIT MENU (Pojok Kanan Bawah) --- */
+        /* --- MICROBIT MENU (Pojok Kanan Tengah) --- */
         .microbit-menu {
             position: absolute;
-            /* Sejajar secara vertikal dengan menu Firebase */
             top: 68vw; 
-            /* Diletakkan di sebelah kanan */
             right: 6vw; 
-            /* Ukuran disamakan dengan menu Firebase agar simetris */
             width: 38vw; 
+            height: auto;
+            z-index: 10;
+        }
+
+        /* --- SYSTEM TERMINAL MENU (Paling Bawah, Tengah) --- */
+        .terminal-menu {
+            position: absolute;
+            /* Ditempatkan di bawah Firebase & Micro:bit */
+            top: 102vw; 
+            /* Teknik agar posisinya pas di tengah-tengah secara horizontal */
+            left: 50%;
+            transform: translateX(-50%);
+            /* Lebar disesuaikan agar proporsional menutupi area bawah */
+            width: 88vw; 
             height: auto;
             z-index: 10;
         }
@@ -69,6 +80,8 @@
         <img src="https://github.com/joanne1chz/exfinpro/blob/main/firebase.png?raw=true" alt="Firebase Menu" class="firebase-menu">
 
         <img src="https://github.com/joanne1chz/exfinpro/blob/main/microbit.png?raw=true" alt="Microbit Menu" class="microbit-menu">
+
+        <img src="https://github.com/joanne1chz/exfinpro/blob/main/system%20terminal.png?raw=true" alt="System Terminal" class="terminal-menu">
     </div>
 
 </body>
