@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticklock Golden Project - Smart Garden 🌱</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Nunito:wght@800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-yellow: #f4d068;
+            --bg-cyan: #4bc3b5;
+            --bg-pink: #e65c83;
+            --panel-dark: #413537;
+            --panel-dark-light: #574b4d;
+            --input-cyan: #49b4ae;
+            --btn-orange: #d9822b;
+            --btn-green: #7fa961;
+            --text-dark: #231b1c;
+            --ticklock-brown: #46372d;
+            --ticklock-yellow: #f1cb61;
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Share Tech Mono', 'Nunito', monospace;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-yellow) 0%, var(--bg-yellow) 55%, var(--bg-cyan) 55%, var(--bg-cyan) 85%, var(--bg-pink) 85%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 550px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(4px);
+            border: 4px solid var(--panel-dark);
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 16px 32px rgba(0,0,0,0.2);
+        }
+
+        /* ===== TOP SECTION (Mascot & Main Panel) ===== */
+        .top-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            align-items: stretch;
+        }
+
+        .mascot-box {
+            flex: 1;
+            background: #f770a1;
+            border: 4px solid var(--panel-dark);
+            border-radius: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            min-height: 160px;
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+        }
+        
+        /* Simbol dekorasi bintang belakang robot bird */
+        .mascot-box::before {
+            content: '⭐';
+            font-size: 80px;
+            opacity: 0.3;
+            position: absolute;
+            animation: rotate 10s linear infinite;
+        }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .mascot-avatar {
+            font-size: 70px;
+            z-index: 1;
+            filter: drop-shadow(2px 4px 0px rgba(0,0,0,0.3));
+        }
+
+        /* Ticklock Golden Project Display Panel */
+        .project-panel {
+            flex: 1.2;
+            background: var(--ticklock-brown);
+            border: 4px solid var(--panel-dark);
+            border-radius: 18px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .project-header {
+            text-align: center;
+            font-size: 14px;
+            font-weight: 900;
+            font-style: italic;
+            color: var(--ticklock-yellow);
+            text-transform: uppercase;
+            border-bottom: 2px dashed rgba(255,255,255,0.2);
+            padding-bottom: 4px;
+            letter-spacing: 1px;
+        }
+
+        .status-display-row {
+            display: flex;
+            gap: 6px;
+            margin: 8px 0;
+        }
+
+        .status-box {
+            flex: 1;
+            background: white;
+            border-radius: 6px;
+            color: #2b7bb9;
+            font-weight: 900;
+            font-style: italic;
+            font-size: 18px;
+            text-align: center;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            border: 2px solid var(--panel-dark);
+        }
+        .status-box.off {
+            color: #888;
+        }
+
+        .value-box {
+            flex: 1;
+            background: var(--ticklock-yellow);
+            border: 2px solid var(--panel-dark);
+            border-radius: 6px;
+            color: var(--text-dark);
+            font-weight: 900;
+            font-style: italic;
+            font-size: 14px;
+            padding: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .value-box .upcoming-tag {
+            background: black;
+            color: white;
+            font-size: 8px;
+            padding: 1px 4px;
+            border-radius: 3px;
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+        }
+
+        .datetime-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1.2fr;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            color: var(--text-dark);
+            text-align: center;
+        }
+        .dt-cell {
+            background: #f1ede2;
+            padding: 4px 2px;
+            border-radius: 4px;
+            border: 1px solid var(--panel-dark);
+        }
+
+        /* ===== MIDDLE SECTION (Firebase & Bluetooth) ===== */
+        .mid-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .card-panel {
+            background: var(--panel-dark);
+            border: 4px solid var(--panel-dark-light);
+            border-radius: 16px;
+            padding: 14px;
+            box-shadow: 0 8px 0px rgba(0,0,0,0.15);
+        }
+        .card-panel.yellow-theme {
+            background: #f6be44;
+            border-color: #dfaa35;
+            color: var(--text-dark);
+        }
+
+        .card-panel-title {
+            font-size: 14px;
+            font-weight: 900;
+            font-style: italic;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .card-panel.yellow-theme .card-panel-title {
+            color: var(--text-dark);
+        }
+
+        /* Inputs Cyan style */
+        label {
+            display: block;
+            font-size: 10px;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+            opacity: 0.8;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            background: var(--input-cyan);
+            border: 2px solid var(--panel-dark);
+            border-radius: 6px;
+            padding: 6px 10px;
+            color: var(--text-dark);
+            font-weight: bold;
+            font-size: 12px;
+            margin-bottom: 8px;
+            outline: none;
+        }
+        input:focus {
+            background: white;
+        }
+
+        /* Arcade buttons */
+        .btn-arcade {
+            width: 100%;
+            border: 3px solid var(--text-dark);
+            border-radius: 8px;
+            padding: 8px;
+            font-size: 13px;
+            font-weight: 900;
+            font-style: italic;
+            text-transform: uppercase;
+            cursor: pointer;
+            color: white;
+            box-shadow: 0 4px 0px var(--text-dark);
+            transition: all 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .btn-arcade:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0px transparent;
+        }
+        .btn-cyan { background: #3ba39e; }
+        .btn-orange { background: var(--btn-orange); color: white; }
+        .btn-green { background: var(--btn-green); color: white; }
+        .btn-arcade:disabled {
+            background: #a0aec0 !important;
+            opacity: 0.6;
+            cursor: not-allowed;
+            box-shadow: 0 2px 0px #4a5568;
+        }
+
+        .bt-space {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: calc(100% - 30px);
+            justify-content: center;
+        }
+
+        /* ===== BOTTOM TERMINAL ===== */
+        .terminal-box {
+            background: #1e1819;
+            border: 4px solid var(--panel-dark);
+            border-radius: 16px;
+            padding: 12px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.6);
+        }
+        .terminal-hdr {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--panel-dark);
+            padding-bottom: 6px;
+            margin-bottom: 8px;
+        }
+        .mac-dots {
+            display: flex;
+            gap: 6px;
+        }
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        .dot.r { background: #ff5f56; }
+        .dot.y { background: #ffbd2e; }
+        .dot.g { background: #27c93f; }
+        
+        .terminal-title {
+            font-size: 12px;
+            color: #7f7f7f;
+        }
+
+        .log-area {
+            height: 120px;
+            overflow-y: auto;
+            font-size: 11px;
+            color: #4af626;
+            line-height: 1.4;
+            padding-right: 5px;
+        }
+        .log-area::-webkit-scrollbar { width: 4px; }
+        .log-area::-webkit-scrollbar-thumb { background: #4af626; border-radius: 2px; }
+
+        /* ===== EXTRA DASHBOARD ELEMENTS (Charts & Mode Banner hidden/cleanly embedded) ===== */
+        .extra-dashboard {
+            margin-top: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 10px;
+            border: 2px dashed var(--panel-dark);
+        }
+        .hidden-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+        .charts-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .mini-chart-card {
+            background: var(--panel-dark);
+            border-radius: 6px;
+            padding: 6px;
+            height: 70px;
+        }
+
+        /* Status Badge Floating */
+        .network-badges {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            gap: 8px;
+            z-index: 100;
+        }
+        .net-badge {
+            background: var(--panel-dark);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: bold;
+            border: 1px solid white;
+        }
+        .net-badge.online { color: #4af626; border-color: #4af626; }
+        .net-badge.offline { color: #ff5f56; border-color: #ff5f56; }
+
+        /* Alert System Ember */
+        .alert-overlay {
+            background: #ffbd2e;
+            color: black;
+            font-weight: 900;
+            padding: 4px;
+            text-align: center;
+            font-size: 11px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            display: none;
+            border: 2px solid var(--panel-dark);
+            animation: blink 1s infinite alternate;
+        }
+        @keyframes blink { from { opacity: 0.6; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<div class="network-badges">
+    <div class="net-badge offline" id="status-bt">BT Offline</div>
+    <div class="net-badge offline" id="status-fb">DB Offline</div>
+</div>
+
+<div class="container">
+
+    <div class="alert-overlay" id="alertEmber">
+        ⚠️ AIR EMBER HABIS (>30CM)! SEGERA ISI!
+    </div>
+
+    <div class="top-row">
+        <div class="mascot-box">
+            <div class="mascot-avatar" id="ember-emoji">🐦</div>
+        </div>
+
+        <div class="project-panel">
+            <div class="project-header">Ticklock Golden Project</div>
+            
+            <div class="status-display-row">
+                <div class="status-box off" id="card-relay">
+                    <span id="lbl-relay">OFF</span> <span id="icon-relay">🥶</span>
+                </div>
+                <div class="value-box">
+                    <span id="val-jarak">-- cm</span>
+                    <span class="upcoming-tag">upcoming</span>
+                </div>
+            </div>
+
+            <div class="datetime-row">
+                <div class="dt-cell" id="live-time">10.53</div>
+                <div class="dt-cell" id="val-jarak-manual">32 C</div>
+                <div class="dt-cell" id="live-date">Tue 26/5/26</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mid-grid">
+        <div class="card-panel">
+            <div class="card-panel-title"><i class="fas fa-cloud"></i> Firebase Sync</div>
+            
+            <label>Api Key</label>
+            <input type="password" id="fb-apiKey" placeholder="AIzaSy...">
+            
+            <label>Database URL</label>
+            <input type="text" id="fb-dbUrl" placeholder="https://...">
+            
+            <label>Node Path</label>
+            <input type="text" id="fb-path" value="smarthome/ruangan1">
+            
+            <button class="btn-arcade btn-cyan" id="btn-connect-fb">Connect</button>
+        </div>
+
+        <div class="card-panel yellow-theme">
+            <div class="card-panel-title"><i class="fab fa-bluetooth-b"></i> Micro:bit Bluetooth</div>
+            
+            <div class="bt-space">
+                <button class="btn-arcade btn-orange" id="btn-connect-ble">Connect Microbit</button>
+                <button class="btn-arcade btn-green" id="btn-disconnect-ble" disabled>Disconnect</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="extra-dashboard">
+        <div class="hidden-controls">
+            <div>MODE: <span id="modePill" style="font-weight:900; color:var(--ticklock-yellow);">OTOMATIS</span></div>
+            <button id="btnToggleMode" style="background:white; color:black; border:none; padding:2px 6px; font-size:10px; font-weight:900; cursor:pointer; border-radius:4px;">Ubah Mode</button>
+        </div>
+        
+        <div id="manual-relay" style="display:none; margin-bottom:8px; justify-content:space-between; align-items:center; font-size:11px;">
+            <span>KONTROL MANUAL POMPA:</span>
+            <input type="checkbox" id="sw-relay" onchange="window.toggleRelay(this.checked)" style="width:auto; margin:0;">
+        </div>
+
+        <div class="charts-container">
+            <div class="mini-chart-card"><canvas id="chart-jarak"></canvas></div>
+            <div class="mini-chart-card"><canvas id="chart-jarak-manual"></canvas></div>
+        </div>
+        <div style="display:none;"><canvas id="chart-jarak-big"></canvas><canvas id="chart-jarak-manual-big"></canvas></div>
+    </div>
+
+    <div class="terminal-box" style="margin-top:15px;">
+        <div class="terminal-hdr">
+            <div class="mac-dots">
+                <div class="dot r" id="btnClearLog" style="cursor:pointer;" title="Clear Log"></div>
+                <div class="dot y"></div>
+                <div class="dot g"></div>
+            </div>
+            <div class="terminal-title">System_terminal</div>
+        </div>
+        <div class="log-area" id="terminalLog"></div>
+    </div>
+
+</div>
+
+<script type="module">
+import { initializeApp, getApps, deleteApp }     from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getDatabase, ref, onValue, update, set } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+
+const state = {
+    db: null, path: "", unsub: null, data: {},
+    device: null, txChar: null, rxChar: null,
+    bleConnected: false, bleBuffer: "",
+    modeOtomatis: 1,
+    charts: {},
+    history: {
+        jarak:        { labels: [], data: [] },
+        jarak_manual: { labels: [], data: [] }
+    }
+};
+
+const MAX_PTS = 20;
+const $ = id => document.getElementById(id);
+
+function log(msg, color = "#4af626") {
+    const t = new Date().toLocaleTimeString('id-ID', { hour12: false });
+    $('terminalLog').insertAdjacentHTML('afterbegin',
+        `<div style="color:${color}">[${t}] ${msg}</div>`);
+}
+
+function updateBTStatus() {
+    $('btn-connect-ble').disabled    = state.bleConnected;
+    $('btn-disconnect-ble').disabled = !state.bleConnected;
+    const b = $('status-bt');
+    b.innerHTML = state.bleConnected ? 'BT Connected' : 'BT Offline';
+    b.className = 'net-badge ' + (state.bleConnected ? 'online' : 'offline');
+}
+
+function updateDBStatus(ok) {
+    const b = $('status-fb');
+    b.innerHTML = ok ? 'DB Synced' : 'DB Offline';
+    b.className = 'net-badge ' + (ok ? 'online' : 'offline');
+}
+
+function applyMode(isAuto) {
+    state.modeOtomatis = isAuto ? 1 : 0;
+    const pill   = $('modePill');
+    if (isAuto) {
+        pill.textContent = 'OTOMATIS';
+        pill.style.color = 'var(--ticklock-yellow)';
+        $('manual-relay').style.display = 'none';
+    } else {
+        pill.textContent = 'MANUAL';
+        pill.style.color = 'var(--bg-pink)';
+        $('manual-relay').style.display = 'flex';
+    }
+    sendBLE("mode", isAuto ? 1 : 0);
+    if (state.db) update(ref(state.db, `${state.path}/mode`), { value: isAuto ? 1 : 0 });
+    log(`Mode → ${isAuto ? 'OTOMATIS' : 'MANUAL'}`);
+}
+
+$('btnToggleMode').onclick = () => applyMode(state.modeOtomatis === 0);
+
+function updateRelayUI(isOn) {
+    const card = $('card-relay');
+    const sw   = $('sw-relay');
+    if(isOn) {
+        card.className = "status-box";
+        $('lbl-relay').textContent = "ON";
+        $('icon-relay').textContent = "🥵"; 
+    } else {
+        card.className = "status-box off";
+        $('lbl-relay').textContent = "OFF";
+        $('icon-relay').textContent = "🥶"; 
+    }
+    if (sw && document.activeElement !== sw) sw.checked = isOn;
+}
+
+function updateSensorUI(key, val) {
+    if (key === 'jarak') {
+        $('val-jarak').textContent = `${val} cm`;
+    }
+    if (key === 'jarak_manual') {
+        $('val-jarak-manual').textContent = `${val} cm`;
+        const alert = $('alertEmber');
+        const emoji = $('ember-emoji');
+        if (val > 30) {
+            alert.style.display = 'block';
+            if (emoji) emoji.textContent = '🚨';
+        } else {
+            alert.style.display = 'none';
+            if (emoji) emoji.textContent = '🤖';
+        }
+    }
+}
+
+// BLE CONFIG
+const SVC = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+const TX  = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
+const RX  = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
+
+async function connectBLE() {
+    try {
+        if (!navigator.bluetooth) throw new Error("Web Bluetooth tidak didukung.");
+        log("Scanning Micro:bit...", "#ffbd2e");
+        state.device = await navigator.bluetooth.requestDevice({
+            filters: [{ namePrefix: "BBC micro:bit" }],
+            optionalServices: [SVC]
+        });
+        state.device.addEventListener("gattserverdisconnected", () => {
+            state.bleConnected = false; updateBTStatus();
+            log("BLE Terputus!", "#ff5f56");
+        });
+        const server  = await state.device.gatt.connect();
+        const service = await server.getPrimaryService(SVC);
+        state.txChar  = await service.getCharacteristic(TX);
+        state.rxChar  = await service.getCharacteristic(RX);
+        await state.txChar.startNotifications();
+        state.txChar.addEventListener("characteristicvaluechanged", onBLEData);
+        state.bleConnected = true; updateBTStatus();
+        log(`Terhubung: ${state.device.name}`);
+    } catch (e) { log(`BLE Error: ${e.message}`, "#ff5f56"); }
+}
+
+function onBLEData(event) {
+    let arr = [];
+    for (let i = 0; i < event.target.value.byteLength; i++)
+        arr.push(event.target.value.getUint8(i));
+    state.bleBuffer += String.fromCharCode.apply(null, arr);
+    const lines = state.bleBuffer.split('\n');
+    state.bleBuffer = lines.pop() || "";
+    lines.forEach(line => { const t = line.trim(); if (t) processBLELine(t); });
+}
+
+function processBLELine(txt) {
+    log(`RX ← ${txt}`, "#27c93f");
+    if (!txt.includes(',')) return;
+    const idx = txt.indexOf(',');
+    const key = txt.substring(0, idx).trim();
+    const val = parseFloat(txt.substring(idx + 1).trim());
+    if (isNaN(val)) return;
+
+    if (key === "mode") { applyMode(val === 1); return; }
+    if (key === "Relay") { updateRelayUI(val === 1); if (state.db) update(ref(state.db, `${state.path}/relay`), { value: val, tipe: 'switch' }); return; }
+    if (key === "jarak") { updateSensorUI("jarak", val); pushHistory("jarak", val); if (state.db) update(ref(state.db, `${state.path}/jarak`), { value: val, tipe: 'sensor', satuan: 'cm' }); return; }
+    if (key === "jarak_manual") { updateSensorUI("jarak_manual", val); pushHistory("jarak_manual", val); if (state.db) update(ref(state.db, `${state.path}/jarak_manual`), { value: val, tipe: 'sensor', satuan: 'cm' }); return; }
+}
+
+async function sendBLE(key, val) {
+    if (!state.rxChar) return;
+    const payload = `${key},${val}\n`;
+    try {
+        await state.rxChar.writeValue(new TextEncoder().encode(payload));
+        log(`TX → ${payload.trim()}`, "#ffbd2e");
+    } catch (e) { log(`TX Error: ${e.message}`, "#ff5f56"); }
+}
+
+window.toggleRelay = (isChecked) => {
+    if (state.modeOtomatis === 1) return;
+    const val = isChecked ? 1 : 0;
+    updateRelayUI(isChecked);
+    sendBLE("Relay", val);
+    if (state.db) update(ref(state.db, `${state.path}/relay`), { value: val });
+};
+
+// FIREBASE DATABASE
+async function connectFirebase() {
+    const apiKey = $('fb-apiKey').value.trim();
+    const dbUrl  = $('fb-dbUrl').value.trim();
+    const path   = $('fb-path').value.trim() || "smarthome/ruangan1";
+    if (!apiKey || !dbUrl) { alert("Isi API Key & URL Database!"); return; }
+
+    try {
+        const apps = getApps();
+        if (apps.length > 0) await deleteApp(apps[0]);
+        if (state.unsub) state.unsub();
+
+        const app = initializeApp({ apiKey, databaseURL: dbUrl, projectId: dbUrl.replace("https://","").split(".")[0] });
+        state.db   = getDatabase(app);
+        state.path = path;
+        log(`Menghubungkan Firebase...`, "#ffbd2e");
+
+        const initData = {
+            jarak: { tipe: 'sensor', value: 0, satuan: 'cm' },
+            jarak_manual: { tipe: 'sensor', value: 0, satuan: 'cm' },
+            relay: { tipe: 'switch', value: 0 },
+            mode: { tipe: 'switch', value: 1 }
+        };
+
+        state.unsub = onValue(ref(state.db, path), (snap) => {
+            const d = snap.val();
+            if (!d) { set(ref(state.db, path), initData); return; }
+            state.data = d;
+            updateDBStatus(true);
+            if (d.jarak)        updateSensorUI("jarak",        d.jarak.value ?? 0);
+            if (d.jarak_manual) updateSensorUI("jarak_manual", d.jarak_manual.value ?? 0);
+            if (d.relay)        updateRelayUI((d.relay.value ?? 0) === 1);
+            if (d.mode)         applyMode((d.mode.value ?? 1) === 1);
+        }, err => { log(`DB Error: ${err.message}`, "#ff5f56"); updateDBStatus(false); });
+
+        log(`Firebase Terkoneksi!`);
+        localStorage.setItem('smarthome_cfg', JSON.stringify({ apiKey, dbUrl, path }));
+    } catch (e) { log(`DB Error: ${e.message}`, "#ff5f56"); updateDBStatus(false); }
+}
+
+// CHARTS RE-SETUP
+function makeChart(canvasId, label, color) {
+    const canvas = $(canvasId);
+    if (!canvas) return null;
+    return new Chart(canvas.getContext('2d'), {
+        type: 'line',
+        data: { labels: [], datasets: [{ data: [], borderColor: color, borderWidth: 2, pointRadius: 0, fill: false, tension: 0.2 }] },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { y: { display: false }, x: { display: false } }
+        }
+    });
+}
+
+function initCharts() {
+    state.charts['chart-jarak'] = makeChart('chart-jarak', 'Jarak', '#4af626');
+    state.charts['chart-jarak-manual'] = makeChart('chart-jarak-manual', 'Manual', '#ffbd2e');
+    state.charts['chart-jarak-big'] = state.charts['chart-jarak'];
+    state.charts['chart-jarak-manual-big'] = state.charts['chart-jarak-manual'];
+}
+
+function pushHistory(key, val) {
+    const h = state.history[key];
+    if (!h) return;
+    h.labels.push("");
+    h.data.push(parseFloat(val) || 0);
+    if (h.labels.length > MAX_PTS) { h.labels.shift(); h.data.shift(); }
+
+    const ch = state.charts[`chart-${key}`];
+    if (ch) {
+        ch.data.labels = h.labels;
+        ch.data.datasets[0].data = h.data;
+        ch.update('none');
+    }
+}
+
+// REALTIME REPLICATED CLOCK FOR TIME/DATE DISPLAY
+function startClock() {
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    setInterval(() => {
+        const d = new Date();
+        $('live-time').textContent = d.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'});
+        $('live-date').textContent = `${days[d.getDay()]} ${d.getDate()}/${d.getMonth()+1}/${d.getFullYear().toString().substring(2)}`;
+    }, 1000);
+}
+
+$('btn-connect-ble').onclick    = connectBLE;
+$('btn-disconnect-ble').onclick = () => { if (state.device) state.device.gatt.disconnect(); };
+$('btn-connect-fb').onclick     = connectFirebase;
+$('btnClearLog').onclick        = () => $('terminalLog').innerHTML = '';
+
+window.onload = () => {
+    initCharts();
+    applyMode(true);
+    startClock();
+    const saved = JSON.parse(localStorage.getItem('smarthome_cfg') || '{}');
+    if (saved.apiKey) {
+        $('fb-apiKey').value = saved.apiKey;
+        $('fb-dbUrl').value  = saved.dbUrl;
+        $('fb-path').value   = saved.path || "smarthome/ruangan1";
+    }
+    log("Ticklock Golden UI siap. Hubungkan Firebase & Micro:bit!");
+};
+</script>
+</body>
+</html>
