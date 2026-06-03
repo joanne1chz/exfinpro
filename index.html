@@ -49,32 +49,26 @@
             display: block;
         }
 
-        /* --- CONTAINER UTAMA TEKS STATUS (Geser Kanan Dikit Lagi) --- */
+        /* --- CONTAINER STATUS KIPAS (Kotak Biru) --- */
         .status-container {
             position: absolute;
-            /* Mengubah left dari 68% ke 71.5% agar bergeser ke kanan pas di tengah kotak */
             top: 46.5%; 
             left: 71.5%;
             transform: translate(-50%, -50%);
-            
             display: flex;
             align-items: center;
             gap: 0.8vw; 
-            
             font-family: 'Mobitale Cnd', 'Arial Black', sans-serif;
             font-size: 4.5vw; 
             font-weight: bold;
             white-space: nowrap;
         }
 
-        /* --- GAYA KHUSUS TEKS HURUF (Gradasi + Stroke + Shadow) --- */
         .status-text {
             text-transform: uppercase;
             background: linear-gradient(to bottom, #75D6FF, #0783B7);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-
-            /* Efek Stroke Putih & Bayangan Tegas Biru */
             filter: 
                 drop-shadow(0px 4px 0px #0269B9)
                 drop-shadow(2px 2px 0px #fff) 
@@ -87,14 +81,41 @@
                 drop-shadow(0px -2px 0px #fff);
         }
 
-        /* --- GAYA KHUSUS EMOJI (Warna Asli) --- */
         .status-emoji {
             -webkit-text-fill-color: initial; 
             background: none;
             filter: drop-shadow(0px 3px 0px #0269B9);
         }
 
-        /* --- ASSET LAIN (Firebase, Microbit, Terminal) --- */
+
+        /* --- CONTAINER INDIKATOR BUS ULTRASONIK (Kotak Oren) --- */
+        .bus-container {
+            position: absolute;
+            top: 79%; 
+            left: 65%;
+            transform: translate(-50%, -50%);
+            
+            font-family: 'Mobitale Cnd', 'Arial Black', sans-serif;
+            font-size: 4.5vw; 
+            font-weight: bold;
+            color: #000000; 
+            white-space: nowrap;
+
+            /* Efek Stroke Putih Tebal & Bayangan Tegas Hitam */
+            filter: 
+                drop-shadow(0px 4px 0px #000000)
+                drop-shadow(2px 2px 0px #fff) 
+                drop-shadow(-2px -2px 0px #fff) 
+                drop-shadow(2px -2px 0px #fff) 
+                drop-shadow(-2px 2px 0px #fff)
+                drop-shadow(2px 0px 0px #fff)
+                drop-shadow(-2px 0px 0px #fff)
+                drop-shadow(0px 2px 0px #fff)
+                drop-shadow(0px -2px 0px #fff);
+        }
+
+
+        /* --- ASSET LAIN --- */
         .firebase-menu {
             position: absolute;
             top: 68vw; 
@@ -135,6 +156,8 @@
                 <span class="status-text">OFF</span>
                 <span class="status-emoji">🫠</span>
             </div>
+
+            <div class="bus-container" id="main-jarak-bus">-</div>
         </div>
 
         <img src="https://github.com/joanne1chz/exfinpro/blob/main/firebase.png?raw=true" alt="Firebase Menu" class="firebase-menu">
