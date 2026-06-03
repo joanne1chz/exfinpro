@@ -3,27 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Halaman Aset Visual</title>
+    <title>Halaman Aset Visual Kita</title>
     <style>
+        /* Mengatur agar body memenuhi layar penuh tanpa margin */
         body {
             margin: 0;
             padding: 0;
-            height: 100vh; /* Ukuran sebesar layar laptop */
-            background-color: #57BCB6; /* Warna latar belakang geometris dasar */
+            width: 100vw;
+            height: 100vh;
+            /* Latar belakang dasar sesuai permintaan */
+            background-color: #57BCB6;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden; /* Sembunyikan scroll jika ada */
         }
 
+        /* Kontainer untuk aset visual */
         .visual-container {
             width: 100%;
             height: 100%;
-            /* Menggunakan visual referensi yang bersih sebagai gambar latar belakang */
-            background-image: url('image_0.png'); 
+            /* Tautan gambar penuh yang benar untuk raw GitHub */
+            background-image: url('https://github.com/joanne1chz/exfinpro/blob/main/Bg.png?raw=true'); 
             background-repeat: no-repeat;
-            background-position: top center; /* Memposisikan konsol/robot di atas */
-            background-size: cover; /* Untuk memenuhi area dengan aset, disesuaikan untuk laptop */
+            /* Memposisikan konsol/robot di bagian atas tengah */
+            background-position: top center; 
+            /* Memastikan gambar menutupi seluruh kontainer */
+            background-size: cover; 
             position: relative;
         }
     </style>
