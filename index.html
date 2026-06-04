@@ -128,7 +128,6 @@
             text-transform: lowercase; 
             white-space: nowrap;
             
-            /* Stroke warna 493A31 tipis */
             filter: 
                 drop-shadow(1px 1px 0px #493A31)
                 drop-shadow(-1px -1px 0px #493A31)
@@ -136,10 +135,9 @@
                 drop-shadow(-1px 1px 0px #493A31);
         }
 
-        /* --- JAM REAL-TIME WIB (Kotak Putih Pertama di Bawah) --- */
+        /* --- JAM REAL-TIME WIB (Kotak Putih Pertama) --- */
         .realtime-clock {
             position: absolute;
-            /* DIUBAH: left dikurangi sedikit menjadi 28.2% untuk bergeser ke arah kiri */
             top: 86.5%; 
             left: 28.2%;
             transform: translate(-50%, -50%);
@@ -151,7 +149,33 @@
             color: #000000; 
             white-space: nowrap;
 
-            /* Filter efek outline putih tipis + shadow hitam tebal di bawahnya */
+            filter: 
+                drop-shadow(0px 4px 0px #000000)
+                drop-shadow(2px 2px 0px #fff) 
+                drop-shadow(-2px -2px 0px #fff) 
+                drop-shadow(2px -2px 0px #fff) 
+                drop-shadow(-2px 2px 0px #fff)
+                drop-shadow(2px 0px 0px #fff)
+                drop-shadow(-2px 0px 0px #fff)
+                drop-shadow(0px 2px 0px #fff)
+                drop-shadow(0px -2px 0px #fff);
+        }
+
+        /* --- SUHU CELCIUS DHT (Kotak Putih Kedua) --- */
+        .temperature-display {
+            position: absolute;
+            top: 86.5%; /* Sejajar dengan jam */
+            left: 51.5%; /* Diperkirakan di tengah kotak putih kedua */
+            transform: translate(-50%, -50%);
+            
+            font-family: 'Mobitale Cnd', 'Arial Black', sans-serif;
+            font-style: italic; 
+            font-size: 4.5vw; 
+            font-weight: bold;
+            color: #000000; 
+            white-space: nowrap;
+
+            /* Efek shadow sama persis dengan jam */
             filter: 
                 drop-shadow(0px 4px 0px #000000)
                 drop-shadow(2px 2px 0px #fff) 
@@ -212,6 +236,8 @@
             <div class="bus-status" id="bus-status-text">disconnected</div>
 
             <div class="realtime-clock" id="realtime-clock">00.00</div>
+
+            <div class="temperature-display" id="main-temperature">- C</div>
         </div>
 
         <img src="https://github.com/joanne1chz/exfinpro/blob/main/firebase.png?raw=true" alt="Firebase Menu" class="firebase-menu">
