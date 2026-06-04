@@ -250,23 +250,22 @@
             left: 4.5vw;
         }
 
-        /* --- DESAIN TOMBOL CONNECT FIREBASE --- */
         .firebase-btn {
             position: absolute;
-            top: 85.5%; /* Posisi pas di bawah kotak Node Path */
+            top: 85.5%; 
             left: 4.5vw;
-            width: 11vw; /* Ukuran proporsional sesuai gambar */
+            width: 11vw; 
             height: 3.2vw;
-            background-color: #3FAEA8; /* Warna teal/hijau toska gelap */
-            border: 2px solid #ffffff; /* Border putih tipis tajam */
-            border-radius: 0.8vw; /* Rounded kapsul miring */
+            background-color: #3FAEA8; 
+            border: 2px solid #ffffff; 
+            border-radius: 0.8vw; 
             color: #ffffff;
             font-family: 'Mobitale Cnd', 'Arial Black', sans-serif;
             font-style: italic;
             font-size: 1.5vw;
             font-weight: bold;
             cursor: pointer;
-            transform: rotate(-1deg); /* Mengikuti rotasi background */
+            transform: rotate(-1deg); 
             display: flex;
             align-items: center;
             justify-content: center;
@@ -274,7 +273,7 @@
         }
 
         .firebase-btn:hover {
-            background-color: #33938E; /* Efek sedikit gelap saat kursor di atas tombol */
+            background-color: #33938E; 
             transform: rotate(-1deg) scale(1.03);
         }
 
@@ -282,8 +281,8 @@
             transform: rotate(-1deg) scale(0.95);
         }
 
-        /* --- ASSET LAIN --- */
-        .microbit-menu {
+        /* --- MICROBIT MENU INTERAKTIF --- */
+        .microbit-menu-wrapper {
             position: absolute;
             top: 68vw; 
             right: 6vw; 
@@ -292,6 +291,60 @@
             z-index: 10;
         }
 
+        .microbit-menu-img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Tombol Transparan Presisi Mengikuti Gambar Desain */
+        .microbit-click-zone {
+            position: absolute;
+            width: 34.5vw;
+            height: 6.8vw;
+            left: 1.8vw;
+            background: rgba(255, 255, 255, 0); /* Transparan penuh agar gambar asli terlihat */
+            border: none;
+            border-radius: 1vw;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        /* Efek feedback visual halus saat diarahkan kursor & diklik */
+        .microbit-click-zone:hover {
+            background: rgba(255, 255, 255, 0.12); 
+        }
+
+        .microbit-click-zone:active {
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        #microbit-connect-btn {
+            top: 19.5%; /* Pas di atas area 'Connect Microbit' */
+        }
+
+        #microbit-disconnect-btn {
+            top: 55.5%; /* Pas di atas area 'Disconnect' */
+        }
+
+        /* Text Keterangan Status Pendukung */
+        .microbit-status-badge {
+            position: absolute;
+            top: 3.5%;
+            right: 4.5%;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1vw;
+            font-weight: 600;
+            color: #FFB3B3; /* Default merah soft pas terputus */
+            background: rgba(0, 0, 0, 0.45);
+            padding: 0.2vw 0.8vw;
+            border-radius: 0.4vw;
+            text-transform: uppercase;
+            letter-spacing: 0.05vw;
+            pointer-events: none; /* Klik tembus ke bawah */
+        }
+
+        /* --- TERMINAL ASSET --- */
         .terminal-menu {
             position: absolute;
             top: 106vw; 
@@ -338,43 +391,101 @@
             <button id="firebase-connect-btn" class="firebase-btn">Connect</button>
         </div>
 
-        <img src="https://github.com/joanne1chz/exfinpro/blob/main/microbit.png?raw=true" alt="Microbit Menu" class="microbit-menu">
+        <div class="microbit-menu-wrapper">
+            <img src="https://github.com/joanne1chz/exfinpro/blob/main/microbit.png?raw=true" alt="Microbit Menu" class="microbit-menu-img">
+            
+            <div id="microbit-status" class="microbit-status-badge">OFFLINE</div>
+
+            <button id="microbit-connect-btn" class="microbit-click-zone" title="Connect Micro:bit via Bluetooth"></button>
+            <button id="microbit-disconnect-btn" class="microbit-click-zone" title="Disconnect Micro:bit"></button>
+        </div>
 
         <img src="https://github.com/joanne1chz/exfinpro/blob/main/system%20terminal.png?raw=true" alt="System Terminal" class="terminal-menu">
     </div>
 
     <script>
-        // Logika fungsi klik tombol Connect Firebase
+        // --- LOGIKA KONEKSI MICRO:BIT VIA BLUETOOTH ---
+        let bluetoothDevice = null;
+
+        document.getElementById('microbit-connect-btn').addEventListener('click', async function() {
+            const statusBadge = document.getElementById('microbit-status');
+            
+            // Cek apakah browser mendukung Web Bluetooth
+            if (!navigator.bluetooth) {
+                alert("Browser Anda tidak mendukung Web Bluetooth API. Gunakan Chrome, Edge, atau Opera!");
+                return;
+            }
+
+            try {
+                statusBadge.innerText = "PAIRING...";
+                statusBadge.style.color = "#FFE699"; // Kuning tanda memproses
+
+                // Request device Bluetooth Micro:bit secara real-time
+                bluetoothDevice = await navigator.bluetooth.requestDevice({
+                    filters: [{ namePrefix: 'BBC micro:bit' }],
+                    optionalServices: ['e95d13b1-251d-470a-a062-fa1922dfa9a8'] // UUID Layanan default m:b
+                });
+
+                statusBadge.innerText = "CONNECTING...";
+                const server = await bluetoothDevice.gatt.connect();
+
+                // Berhasil terhubung!
+                statusBadge.innerText = "ONLINE";
+                statusBadge.style.color = "#A3FFB4"; // Hijau terang sukses
+                alert("Koneksi Sukses! Web Bluetooth telah terhubung ke BBC micro:bit.");
+
+            } catch (error) {
+                console.log("Koneksi Bluetooth Dibatalkan/Gagal:", error);
+                statusBadge.innerText = "OFFLINE";
+                statusBadge.style.color = "#FFB3B3";
+                
+                // Alert jika user menekan tombol cancel pada pop-up window pairing
+                if (error.name !== "NotFoundError") {
+                    alert("Gagal menyambungkan Bluetooth: " + error.message);
+                }
+            }
+        });
+
+        document.getElementById('microbit-disconnect-btn').addEventListener('click', function() {
+            const statusBadge = document.getElementById('microbit-status');
+
+            if (bluetoothDevice && bluetoothDevice.gatt.connected) {
+                bluetoothDevice.gatt.disconnect();
+                alert("Koneksi Micro:bit berhasil diputus secara aman.");
+            } else {
+                alert("Tidak ada perangkat Micro:bit aktif yang sedang terhubung.");
+            }
+
+            statusBadge.innerText = "OFFLINE";
+            statusBadge.style.color = "#FFB3B3";
+        });
+
+
+        // --- LOGIKA KONEKSI FIREBASE ---
         document.getElementById('firebase-connect-btn').addEventListener('click', function() {
             const apiKey = document.getElementById('api-key-input').value.trim();
             const dbUrl = document.getElementById('db-url-input').value.trim();
             const nodePath = document.getElementById('node-path-input').value.trim();
 
-            // Validasi sederhana: pastikan semua kolom terisi
             if (apiKey === "" || dbUrl === "" || nodePath === "") {
                 alert("Gagal Terhubung! Harap isi semua kolom API Key, Database URL, dan Node Path terlebih dahulu.");
                 return;
             }
 
-            // Simulasi pengecekan format URL Database dasar
             if (!dbUrl.startsWith("http://") && !dbUrl.startsWith("https://")) {
                 alert("Format Database URL salah! Harus diawali dengan http:// atau https://");
                 return;
             }
 
-            // Jika validasi input berhasil lolos
             this.innerText = "Connecting...";
             
             setTimeout(() => {
                 this.innerText = "Connected";
                 alert("Berhasil terhubung ke Firebase Cloud Sync! Data sekarang siap disinkronkan.");
-                
-                // Di sini kamu bisa meletakkan baris inisialisasi Firebase aslimu nanti, contoh:
-                // firebase.initializeApp(firebaseConfig);
             }, 1500);
         });
 
-        // Logika otomatis update status tulisan mengikuti nilai jarak sensor
+        // --- LOGIKA OTOMATIS RUNNING ---
         function updateUltrasonicStatus() {
             const distanceElement = document.getElementById('main-jarak-bus');
             const statusElement = document.getElementById('bus-status-text');
@@ -382,14 +493,12 @@
             if (!distanceElement || !statusElement) return;
 
             let rawText = distanceElement.innerText.trim().toUpperCase();
-
             if (rawText === "" || rawText === "- CM" || rawText.includes("-")) {
                 statusElement.innerText = "disconnected";
                 return;
             }
 
             let distanceValue = parseInt(rawText.replace(/[^0-9]/g, ''));
-
             if (isNaN(distanceValue)) {
                 statusElement.innerText = "disconnected";
             } else if (distanceValue === 0) {
@@ -399,13 +508,11 @@
             }
         }
 
-        // Logika jam real-time khusus zona waktu Asia/Jakarta (WIB)
         function updateRealTimeClock() {
             const clockElement = document.getElementById('realtime-clock');
             if (!clockElement) return;
 
             const now = new Date();
-            
             const formatter = new Intl.DateTimeFormat('en-US', {
                 timeZone: 'Asia/Jakarta',
                 hour: '2-digit',
@@ -416,20 +523,16 @@
             const parts = formatter.formatToParts(now);
             const hour = parts.find(p => p.type === 'hour').value;
             const minute = parts.find(p => p.type === 'minute').value;
-
             clockElement.innerText = `${hour}.${minute}`;
         }
 
-        // Logika tanggal real-time
         function updateRealTimeDate() {
             const dateElement = document.getElementById('realtime-date');
             if (!dateElement) return;
 
             const now = new Date();
-            
             const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
             const dayName = days[now.getDay()];
-
             const day = now.getDate();
             const month = now.getMonth() + 1;
             const year = now.getFullYear().toString().slice(-2);
