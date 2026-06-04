@@ -235,9 +235,8 @@
             color: rgba(255, 255, 255, 0.6); 
         }
 
-        /* UPDATE POSISI FINAL */
         #api-key-input {
-            top: 21.0%; /* Dikebawahin sedikit */
+            top: 21.0%; 
             left: 4.5vw;
         }
 
@@ -247,8 +246,40 @@
         }
 
         #node-path-input {
-            top: 66.5%; /* Dikeatasin sedikit */
+            top: 66.5%; 
             left: 4.5vw;
+        }
+
+        /* --- DESAIN TOMBOL CONNECT FIREBASE --- */
+        .firebase-btn {
+            position: absolute;
+            top: 85.5%; /* Posisi pas di bawah kotak Node Path */
+            left: 4.5vw;
+            width: 11vw; /* Ukuran proporsional sesuai gambar */
+            height: 3.2vw;
+            background-color: #3FAEA8; /* Warna teal/hijau toska gelap */
+            border: 2px solid #ffffff; /* Border putih tipis tajam */
+            border-radius: 0.8vw; /* Rounded kapsul miring */
+            color: #ffffff;
+            font-family: 'Mobitale Cnd', 'Arial Black', sans-serif;
+            font-style: italic;
+            font-size: 1.5vw;
+            font-weight: bold;
+            cursor: pointer;
+            transform: rotate(-1deg); /* Mengikuti rotasi background */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .firebase-btn:hover {
+            background-color: #33938E; /* Efek sedikit gelap saat kursor di atas tombol */
+            transform: rotate(-1deg) scale(1.03);
+        }
+
+        .firebase-btn:active {
+            transform: rotate(-1deg) scale(0.95);
         }
 
         /* --- ASSET LAIN --- */
@@ -303,6 +334,8 @@
             <input type="text" id="api-key-input" class="firebase-input" placeholder="Masukkan API Key...">
             <input type="text" id="db-url-input" class="firebase-input" placeholder="Masukkan URL Database...">
             <input type="text" id="node-path-input" class="firebase-input" placeholder="Masukkan Node Path...">
+            
+            <button id="firebase-connect-btn" class="firebase-btn">Connect</button>
         </div>
 
         <img src="https://github.com/joanne1chz/exfinpro/blob/main/microbit.png?raw=true" alt="Microbit Menu" class="microbit-menu">
@@ -311,6 +344,36 @@
     </div>
 
     <script>
+        // Logika fungsi klik tombol Connect Firebase
+        document.getElementById('firebase-connect-btn').addEventListener('click', function() {
+            const apiKey = document.getElementById('api-key-input').value.trim();
+            const dbUrl = document.getElementById('db-url-input').value.trim();
+            const nodePath = document.getElementById('node-path-input').value.trim();
+
+            // Validasi sederhana: pastikan semua kolom terisi
+            if (apiKey === "" || dbUrl === "" || nodePath === "") {
+                alert("Gagal Terhubung! Harap isi semua kolom API Key, Database URL, dan Node Path terlebih dahulu.");
+                return;
+            }
+
+            // Simulasi pengecekan format URL Database dasar
+            if (!dbUrl.startsWith("http://") && !dbUrl.startsWith("https://")) {
+                alert("Format Database URL salah! Harus diawali dengan http:// atau https://");
+                return;
+            }
+
+            // Jika validasi input berhasil lolos
+            this.innerText = "Connecting...";
+            
+            setTimeout(() => {
+                this.innerText = "Connected";
+                alert("Berhasil terhubung ke Firebase Cloud Sync! Data sekarang siap disinkronkan.");
+                
+                // Di sini kamu bisa meletakkan baris inisialisasi Firebase aslimu nanti, contoh:
+                // firebase.initializeApp(firebaseConfig);
+            }, 1500);
+        });
+
         // Logika otomatis update status tulisan mengikuti nilai jarak sensor
         function updateUltrasonicStatus() {
             const distanceElement = document.getElementById('main-jarak-bus');
