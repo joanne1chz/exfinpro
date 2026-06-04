@@ -165,7 +165,6 @@
         .temperature-display {
             position: absolute;
             top: 86.5%; 
-            /* DIUBAH: left dinaikkan menjadi 55% biar lebih ke kanan */
             left: 55%; 
             transform: translate(-50%, -50%);
             
@@ -176,6 +175,35 @@
             color: #000000; 
             white-space: nowrap;
 
+            filter: 
+                drop-shadow(0px 4px 0px #000000)
+                drop-shadow(2px 2px 0px #fff) 
+                drop-shadow(-2px -2px 0px #fff) 
+                drop-shadow(2px -2px 0px #fff) 
+                drop-shadow(-2px 2px 0px #fff)
+                drop-shadow(2px 0px 0px #fff)
+                drop-shadow(-2px 0px 0px #fff)
+                drop-shadow(0px 2px 0px #fff)
+                drop-shadow(0px -2px 0px #fff);
+        }
+
+        /* --- HARI & TANGGAL (Kotak Putih Ketiga) --- */
+        .date-display {
+            position: absolute;
+            top: 86.5%; 
+            left: 82%; /* Diperkirakan di tengah kotak putih ketiga */
+            transform: translate(-50%, -50%);
+            
+            font-family: 'Mobitale Cnd', 'Arial Black', sans-serif;
+            font-style: italic; 
+            font-size: 2.8vw; /* Font lebih kecil supaya muat atas-bawah */
+            font-weight: bold;
+            color: #000000; 
+            white-space: nowrap;
+            text-align: center;
+            line-height: 1.1; /* Mengatur jarak antar baris supaya rapat/grup */
+
+            /* Efek shadow sama persis */
             filter: 
                 drop-shadow(0px 4px 0px #000000)
                 drop-shadow(2px 2px 0px #fff) 
@@ -238,6 +266,10 @@
             <div class="realtime-clock" id="realtime-clock">00.00</div>
 
             <div class="temperature-display" id="main-temperature">- C</div>
+
+            <div class="date-display" id="realtime-date">
+                Thursday<br>4/6/26
+            </div>
         </div>
 
         <img src="https://github.com/joanne1chz/exfinpro/blob/main/firebase.png?raw=true" alt="Firebase Menu" class="firebase-menu">
@@ -273,7 +305,7 @@
             }
         }
 
-        // Logika jam real-time khusus zona waktu Asia/Jakarta (WIB) dengan format titik (.)
+        // Logika jam real-time khusus zona waktu Asia/Jakarta (WIB)
         function updateRealTimeClock() {
             const clockElement = document.getElementById('realtime-clock');
             if (!clockElement) return;
@@ -294,10 +326,36 @@
             clockElement.innerText = `${hour}.${minute}`;
         }
 
+        // Logika tanggal real-time (Hari dan DD/MM/YY)
+        function updateRealTimeDate() {
+            const dateElement = document.getElementById('realtime-date');
+            if (!dateElement) return;
+
+            const now = new Date();
+            
+            // Mengambil nama hari
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const dayName = days[now.getDay()];
+
+            // Format tanggal DD/MM/YY
+            const day = now.getDate();
+            const month = now.getMonth() + 1; // getMonth dimulai dari 0
+            const year = now.getFullYear().toString().slice(-2); // Ambil 2 digit terakhir tahun
+
+            // Masukkan pakai <br> supaya jadi 2 baris
+            dateElement.innerHTML = `${dayName}<br>${day}/${month}/${year}`;
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             updateUltrasonicStatus();
             updateRealTimeClock();
-            setInterval(updateRealTimeClock, 1000);
+            updateRealTimeDate();
+            
+            // Update jam dan tanggal setiap detik
+            setInterval(() => {
+                updateRealTimeClock();
+                updateRealTimeDate();
+            }, 1000);
         });
     </script>
 </body>
