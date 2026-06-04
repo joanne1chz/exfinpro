@@ -42,7 +42,7 @@
             display: flex;
             flex-direction: column;
             gap: 0.8vw;
-            z-index: 9999; /* Memastikan selalu berada di lapisan paling atas */
+            z-index: 9999;
         }
 
         .indicator-box {
@@ -64,21 +64,21 @@
 
         /* State Offline (Default) */
         .indicator-box.bt-offline {
-            background-color: #564E4D; /* Abu-abu gelap */
+            background-color: #564E4D; 
             box-shadow: 0px 4px 0px #2D2726;
         }
         .indicator-box.db-offline {
-            background-color: #EFA83E; /* Oranye/Kuning Gelap */
+            background-color: #EFA83E; 
             box-shadow: 0px 4px 0px #A06716;
         }
 
         /* State Online (Aktif) */
         .indicator-box.bt-online {
-            background-color: #2ECC71; /* Hijau Sukses */
+            background-color: #2ECC71; 
             box-shadow: 0px 4px 0px #1E8449;
         }
         .indicator-box.db-online {
-            background-color: #3498DB; /* Biru Sukses */
+            background-color: #3498DB; 
             box-shadow: 0px 4px 0px #21618C;
         }
 
@@ -456,8 +456,8 @@
             <img src="https://github.com/joanne1chz/exfinpro/blob/main/Main.png?raw=true" alt="Main Menu" class="main-menu-img">
             
             <div class="status-container" id="main-status-kipas">
-                <span class="status-text">OFF</span>
-                <span class="status-emoji">🫠</span>
+                <span class="status-text" id="kipas-text">OFF</span>
+                <span class="status-emoji" id="kipas-emoji">🫠</span>
             </div>
 
             <div class="bus-distance" id="main-jarak-bus">- CM</div>
@@ -518,9 +518,57 @@
             logContainer.scrollTop = logContainer.scrollHeight;
         }
 
+        // --- BUFFER DATA SERIAL ---
+        let receivedDataBuffer = "";
+
+        // --- FUNGSI PARSER UNTUK MEMECAH DATA SENSOR DARI MICROBIT ---
+        function handleMicrobitData(rawData) {
+            receivedDataBuffer += rawData;
+            
+            // Lakukan pemotongan jika Micro:bit mengirim data berakhiran (\n)
+            while (receivedDataBuffer.includes("\n")) {
+                let lineIdx = receivedDataBuffer.indexOf("\n");
+                let currentLine = receivedDataBuffer.substring(0, lineIdx).trim();
+                receivedDataBuffer = receivedDataBuffer.substring(lineIdx + 1);
+
+                // Ekstrak pesan berformat "key:value" (Contoh: "suhu:28")
+                if (currentLine.includes(":")) {
+                    let parts = currentLine.split(":");
+                    let key = parts[0].trim();
+                    let val = parseInt(parts[1].trim());
+
+                    if (isNaN(val)) continue;
+
+                    // 1. Update Display Suhu DHT
+                    if (key === "suhu") {
+                        document.getElementById('main-temperature').innerText = val + " C";
+                    }
+                    
+                    // 2. Update Display Jarak Ultrasonik & Status Teks Situasi
+                    else if (key === "jarak") {
+                        document.getElementById('main-jarak-bus').innerText = val + " CM";
+                        updateUltrasonicStatus(val);
+                    }
+                    
+                    // 3. Update Status Teks Visual Kipas dan Emoji
+                    else if (key === "kipas") {
+                        const txtEl = document.getElementById('kipas-text');
+                        const emjEl = document.getElementById('kipas-emoji');
+                        if (val === 1) {
+                            txtEl.innerText = "ON";
+                            emjEl.innerText = "🥶"; 
+                        } else {
+                            txtEl.innerText = "OFF";
+                            emjEl.innerText = "🫠";
+                        }
+                    }
+                }
+            }
+        }
 
         // --- LOGIKA KONEKSI MICRO:BIT VIA BLUETOOTH API ---
         let bluetoothDevice = null;
+        let rxCharacteristic = null;
         const btStatusBox = document.getElementById('bt-status-box');
 
         document.getElementById('microbit-connect-btn').addEventListener('click', async function() {
@@ -541,11 +589,26 @@
                 writeToTerminal(`Menghubungkan ke device: ${bluetoothDevice.name}...`, "info");
                 const server = await bluetoothDevice.gatt.connect();
                 
+                writeToTerminal("Mengambil UART Primary Service...", "info");
+                const service = await server.getPrimaryService('e95d13b1-251d-470a-a062-fa1922dfa9a8');
+                
+                writeToTerminal("Membuka jalur TX/RX Characteristic...", "info");
+                rxCharacteristic = await service.getCharacteristic('e95d9250-251d-470a-a062-fa1922dfa9a8');
+                
+                // MENGAKTIFKAN LISTENER NOTIFIKASI ALIRAN DATA DARI SENSOR FISIK
+                writeToTerminal("Mengaktifkan aliran penerimaan data otomatis...", "info");
+                await rxCharacteristic.startNotifications();
+                rxCharacteristic.addEventListener('characteristicvaluechanged', (event) => {
+                    let decoder = new TextDecoder('utf-8');
+                    let chunk = decoder.decode(event.target.value);
+                    handleMicrobitData(chunk); // Kirim potongan data sensor ke parser
+                });
+
                 // Ubah Indikator Pojok Kanan Atas menjadi Online
                 btStatusBox.innerText = "BT Online";
                 btStatusBox.className = "indicator-box bt-online";
 
-                writeToTerminal(`Berhasil terhubung secara aman dengan ${bluetoothDevice.name}!`, "success");
+                writeToTerminal(`Berhasil terhubung secara aman dengan ${bluetoothDevice.name}! Aliran data sensor aktif.`, "success");
                 alert("Koneksi Sukses! Web Bluetooth telah terhubung ke BBC micro:bit.");
 
             } catch (error) {
@@ -566,6 +629,13 @@
                 // Kembalikan Indikator Pojok Kanan Atas menjadi Offline
                 btStatusBox.innerText = "BT Offline";
                 btStatusBox.className = "indicator-box bt-offline";
+
+                // Reset visual data display kembali ke default strip
+                document.getElementById('main-temperature').innerText = "- C";
+                document.getElementById('main-jarak-bus').innerText = "- CM";
+                document.getElementById('bus-status-text').innerText = "disconnected";
+                document.getElementById('kipas-text').innerText = "OFF";
+                document.getElementById('kipas-emoji').innerText = "🫠";
 
                 writeToTerminal("Perangkat BBC micro:bit berhasil diputus dengan aman.", "success");
                 alert("Koneksi Micro:bit berhasil diputus secara aman.");
@@ -613,26 +683,17 @@
             }, 1500);
         });
 
-        // --- LOGIKA OTOMATIS RUNNING CLOCK & STATUS ---
-        function updateUltrasonicStatus() {
-            const distanceElement = document.getElementById('main-jarak-bus');
+        // --- LOGIKA TANGGAPAN STATUS TEKS BERDASARKAN ANGKA JARAK ASLI ---
+        function updateUltrasonicStatus(distanceValue) {
             const statusElement = document.getElementById('bus-status-text');
-            
-            if (!distanceElement || !statusElement) return;
+            if (!statusElement) return;
 
-            let rawText = distanceElement.innerText.trim().toUpperCase();
-            if (rawText === "" || rawText === "- CM" || rawText.includes("-")) {
-                statusElement.innerText = "disconnected";
-                return;
-            }
-
-            let distanceValue = parseInt(rawText.replace(/[^0-9]/g, ''));
-            if (isNaN(distanceValue)) {
-                statusElement.innerText = "disconnected";
-            } else if (distanceValue === 0) {
+            if (distanceValue === 0) {
                 statusElement.innerText = "arrived";
-            } else if (distanceValue > 0) {
+            } else if (distanceValue > 0 && distanceValue <= 30) {
                 statusElement.innerText = "upcoming";
+            } else {
+                statusElement.innerText = "disconnected";
             }
         }
 
@@ -657,7 +718,6 @@
         // Booting pertama kali saat halaman selesai dimuat
         window.addEventListener('DOMContentLoaded', () => {
             writeToTerminal("Menginisialisasi modul Core Dashboard System...", "info");
-            updateUltrasonicStatus();
             updateRealTimeClock();
             writeToTerminal("Sistem terminal siap. Menunggu perintah koneksi perangkat...", "success");
             
