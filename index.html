@@ -164,4 +164,141 @@
         /* --- SUHU CELCIUS DHT (Kotak Putih Kedua) --- */
         .temperature-display {
             position: absolute;
-            top: 86.5%;
+            top: 86.5%; 
+            /* DIUBAH: left dinaikkan menjadi 55% biar lebih ke kanan */
+            left: 55%; 
+            transform: translate(-50%, -50%);
+            
+            font-family: 'Mobitale Cnd', 'Arial Black', sans-serif;
+            font-style: italic; 
+            font-size: 4.5vw; 
+            font-weight: bold;
+            color: #000000; 
+            white-space: nowrap;
+
+            filter: 
+                drop-shadow(0px 4px 0px #000000)
+                drop-shadow(2px 2px 0px #fff) 
+                drop-shadow(-2px -2px 0px #fff) 
+                drop-shadow(2px -2px 0px #fff) 
+                drop-shadow(-2px 2px 0px #fff)
+                drop-shadow(2px 0px 0px #fff)
+                drop-shadow(-2px 0px 0px #fff)
+                drop-shadow(0px 2px 0px #fff)
+                drop-shadow(0px -2px 0px #fff);
+        }
+
+
+        /* --- ASSET LAIN --- */
+        .firebase-menu {
+            position: absolute;
+            top: 68vw; 
+            left: 6vw; 
+            width: 38vw; 
+            height: auto;
+            z-index: 10;
+        }
+
+        .microbit-menu {
+            position: absolute;
+            top: 68vw; 
+            right: 6vw; 
+            width: 38vw; 
+            height: auto;
+            z-index: 10;
+        }
+
+        .terminal-menu {
+            position: absolute;
+            top: 106vw; 
+            left: 50%;
+            transform: translateX(-50%);
+            width: 88vw; 
+            height: auto;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="landing-container">
+        
+        <div class="main-menu-wrapper">
+            <img src="https://github.com/joanne1chz/exfinpro/blob/main/Main.png?raw=true" alt="Main Menu" class="main-menu-img">
+            
+            <div class="status-container" id="main-status-kipas">
+                <span class="status-text">OFF</span>
+                <span class="status-emoji">🫠</span>
+            </div>
+
+            <div class="bus-distance" id="main-jarak-bus">- CM</div>
+            
+            <div class="bus-status" id="bus-status-text">disconnected</div>
+
+            <div class="realtime-clock" id="realtime-clock">00.00</div>
+
+            <div class="temperature-display" id="main-temperature">- C</div>
+        </div>
+
+        <img src="https://github.com/joanne1chz/exfinpro/blob/main/firebase.png?raw=true" alt="Firebase Menu" class="firebase-menu">
+
+        <img src="https://github.com/joanne1chz/exfinpro/blob/main/microbit.png?raw=true" alt="Microbit Menu" class="microbit-menu">
+
+        <img src="https://github.com/joanne1chz/exfinpro/blob/main/system%20terminal.png?raw=true" alt="System Terminal" class="terminal-menu">
+    </div>
+
+    <script>
+        // Logika otomatis update status tulisan mengikuti nilai jarak sensor
+        function updateUltrasonicStatus() {
+            const distanceElement = document.getElementById('main-jarak-bus');
+            const statusElement = document.getElementById('bus-status-text');
+            
+            if (!distanceElement || !statusElement) return;
+
+            let rawText = distanceElement.innerText.trim().toUpperCase();
+
+            if (rawText === "" || rawText === "- CM" || rawText.includes("-")) {
+                statusElement.innerText = "disconnected";
+                return;
+            }
+
+            let distanceValue = parseInt(rawText.replace(/[^0-9]/g, ''));
+
+            if (isNaN(distanceValue)) {
+                statusElement.innerText = "disconnected";
+            } else if (distanceValue === 0) {
+                statusElement.innerText = "arrived";
+            } else if (distanceValue > 0) {
+                statusElement.innerText = "upcoming";
+            }
+        }
+
+        // Logika jam real-time khusus zona waktu Asia/Jakarta (WIB) dengan format titik (.)
+        function updateRealTimeClock() {
+            const clockElement = document.getElementById('realtime-clock');
+            if (!clockElement) return;
+
+            const now = new Date();
+            
+            const formatter = new Intl.DateTimeFormat('en-US', {
+                timeZone: 'Asia/Jakarta',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            });
+            
+            const parts = formatter.formatToParts(now);
+            const hour = parts.find(p => p.type === 'hour').value;
+            const minute = parts.find(p => p.type === 'minute').value;
+
+            clockElement.innerText = `${hour}.${minute}`;
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateUltrasonicStatus();
+            updateRealTimeClock();
+            setInterval(updateRealTimeClock, 1000);
+        });
+    </script>
+</body>
+</html>
