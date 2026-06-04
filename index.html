@@ -92,7 +92,6 @@
         /* --- INDIKATOR JARAK (Kotak Oren Kiri) --- */
         .bus-distance {
             position: absolute;
-            /* Tetap terkunci aman di koordinat pesananmu */
             top: 65%; 
             left: 62%;
             transform: translate(-50%, -50%);
@@ -118,7 +117,6 @@
         /* --- STATUS KONEKSI (Kapsul Hitam Kanan) --- */
         .bus-status {
             position: absolute;
-            /* DIUBAH: top diganti ke 69% biar posisinya naik sedikit dibanding sebelumnya */
             top: 69%; 
             left: 83%; 
             transform: translate(-50%, -50%);
@@ -136,6 +134,34 @@
                 drop-shadow(-1px -1px 0px #493A31)
                 drop-shadow(1px -1px 0px #493A31)
                 drop-shadow(-1px 1px 0px #493A31);
+        }
+
+        /* --- JAM REAL-TIME WIB (Kotak Putih Pertama di Bawah) --- */
+        .realtime-clock {
+            position: absolute;
+            /* Koordinat perkiraan awal masuk ke kotak putih pertama */
+            top: 88.5%; 
+            left: 26%;
+            transform: translate(-50%, -50%);
+            
+            font-family: 'Mobitale Cnd', 'Arial Black', sans-serif;
+            font-style: italic; /* Gaya tulisan miring mengikuti gaya CM */
+            font-size: 4.5vw; 
+            font-weight: bold;
+            color: #000000; 
+            white-space: nowrap;
+
+            /* Filter efek outline putih tipis + shadow hitam tebal di bawahnya */
+            filter: 
+                drop-shadow(0px 4px 0px #000000)
+                drop-shadow(2px 2px 0px #fff) 
+                drop-shadow(-2px -2px 0px #fff) 
+                drop-shadow(2px -2px 0px #fff) 
+                drop-shadow(-2px 2px 0px #fff)
+                drop-shadow(2px 0px 0px #fff)
+                drop-shadow(-2px 0px 0px #fff)
+                drop-shadow(0px 2px 0px #fff)
+                drop-shadow(0px -2px 0px #fff);
         }
 
 
@@ -184,6 +210,8 @@
             <div class="bus-distance" id="main-jarak-bus">- CM</div>
             
             <div class="bus-status" id="bus-status-text">disconnected</div>
+
+            <div class="realtime-clock" id="realtime-clock">00.00</div>
         </div>
 
         <img src="https://github.com/joanne1chz/exfinpro/blob/main/firebase.png?raw=true" alt="Firebase Menu" class="firebase-menu">
@@ -203,13 +231,11 @@
 
             let rawText = distanceElement.innerText.trim().toUpperCase();
 
-            // Jika masih bawaan awal atau mendeteksi strip (-)
             if (rawText === "" || rawText === "- CM" || rawText.includes("-")) {
                 statusElement.innerText = "disconnected";
                 return;
             }
 
-            // Ambil angka saja untuk logika arrived / upcoming
             let distanceValue = parseInt(rawText.replace(/[^0-9]/g, ''));
 
             if (isNaN(distanceValue)) {
@@ -221,8 +247,36 @@
             }
         }
 
-        // Jalankan saat pertama kali dirender
-        window.addEventListener('DOMContentLoaded', updateUltrasonicStatus);
+        // Logika jam real-time khusus zona waktu Asia/Jakarta (WIB) dengan format titik (.)
+        function updateRealTimeClock() {
+            const clockElement = document.getElementById('realtime-clock');
+            if (!clockElement) return;
+
+            const now = new Date();
+            
+            // Mengambil data waktu spesifik WIB menggunakan Intl.DateTimeFormat
+            const formatter = new Intl.DateTimeFormat('en-US', {
+                timeZone: 'Asia/Jakarta',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            });
+            
+            const parts = formatter.formatToParts(now);
+            const hour = parts.find(p => p.type === 'hour').value;
+            const minute = parts.find(p => p.type === 'minute').value;
+
+            // Satukan jam dan menit menggunakan tanda titik (.) sesuai gambar referensi
+            clockElement.innerText = `${hour}.${minute}`;
+        }
+
+        // Jalankan fungsi saat pertama kali dirender
+        window.addEventListener('DOMContentLoaded', () => {
+            updateUltrasonicStatus();
+            updateRealTimeClock();
+            // Perbarui jam setiap 1 detik agar selalu tepat waktu
+            setInterval(updateRealTimeClock, 1000);
+        });
     </script>
 </body>
 </html>
