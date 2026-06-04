@@ -92,7 +92,7 @@
         /* --- INDIKATOR JARAK (Kotak Oren Kiri) --- */
         .bus-distance {
             position: absolute;
-            /* Koordinat aman pas di kotak oren sesuai request */
+            /* Koordinat aman pas di kotak oren pas 65% dan 62% */
             top: 65%; 
             left: 62%;
             transform: translate(-50%, -50%);
@@ -118,14 +118,14 @@
         /* --- STATUS KONEKSI (Kapsul Hitam Kanan) --- */
         .bus-status {
             position: absolute;
-            /* Koordinat center pas di dalam kapsul hitam */
-            top: 65.5%; 
-            left: 81.5%; 
+            /* Diubah: Lebih turun (67.5%) dan lebih ke kanan (83.5%) supaya masuk tengah kapsul */
+            top: 67.5%; 
+            left: 83.5%; 
             transform: translate(-50%, -50%);
             
             font-family: 'Inter', sans-serif;
-            font-weight: 600; /* Semi Bold */
-            font-size: 1.5vw; /* Dikecilkan agar pas masuk kapsul dan tidak luber */
+            font-weight: 600; 
+            font-size: 1.5vw; 
             color: #EAE0CD;
             text-transform: lowercase; 
             white-space: nowrap;
@@ -194,7 +194,7 @@
     </div>
 
     <script>
-        // Logika update status mengikuti nilai jarak sensor secara real-time
+        // Logika otomatis update status tulisan mengikuti nilai jarak sensor
         function updateUltrasonicStatus() {
             const distanceElement = document.getElementById('main-jarak-bus');
             const statusElement = document.getElementById('bus-status-text');
@@ -203,13 +203,13 @@
 
             let rawText = distanceElement.innerText.trim().toUpperCase();
 
-            // Jika belum konek atau ada tanda strip
+            // Jika masih bawaan awal atau mendeteksi strip (-)
             if (rawText === "" || rawText === "- CM" || rawText.includes("-")) {
                 statusElement.innerText = "disconnected";
                 return;
             }
 
-            // Ambil angka saja
+            // Ambil angka saja untuk logika arrived / upcoming
             let distanceValue = parseInt(rawText.replace(/[^0-9]/g, ''));
 
             if (isNaN(distanceValue)) {
@@ -221,7 +221,7 @@
             }
         }
 
-        // Jalankan saat load awal
+        // Jalankan saat pertama kali dirender
         window.addEventListener('DOMContentLoaded', updateUltrasonicStatus);
     </script>
 </body>
