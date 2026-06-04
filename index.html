@@ -357,13 +357,13 @@
         /* Kontainer teks log di dalam area kotak hitam terminal */
         .terminal-log-container {
             position: absolute;
-            top: 22%;    /* Mengikuti area letak mulainya kotak hitam pada asset */
+            top: 31%;    /* Diturunkan dari 22% ke 31% agar tepat masuk ke dalam kotak hitam */
             left: 3.5%;  /* Mengikuti lekukan padding sisi kiri kotak hitam */
             width: 93%;  /* Menyesuaikan lebar dalam kotak hitam */
-            height: 72%; /* Batas tinggi area hitam agar tidak meluber keluar */
+            height: 63%; /* Disesuaikan dari 72% ke 63% agar batas bawahnya presisi */
             background: transparent;
             overflow-y: auto; /* Mengaktifkan fungsi scroll ke bawah jika log penuh */
-            padding: 1vw 1.5vw;
+            padding: 0.5vw 1.5vw;
             display: flex;
             flex-direction: column;
             gap: 0.4vw;
@@ -592,31 +592,15 @@
             clockElement.innerText = `${hour}.${minute}`;
         }
 
-        function updateRealTimeDate() {
-            const dateElement = document.getElementById('realtime-date');
-            if (!dateElement) return;
-
-            const now = new Date();
-            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-            const dayName = days[now.getDay()];
-            const day = now.getDate();
-            const month = now.getMonth() + 1;
-            const year = now.getFullYear().toString().slice(-2);
-
-            dateElement.innerHTML = `${dayName}<br>${day}/${month}/${year}`;
-        }
-
         // Booting pertama kali saat halaman selesai dimuat
         window.addEventListener('DOMContentLoaded', () => {
             writeToTerminal("Menginisialisasi modul Core Dashboard System...", "info");
             updateUltrasonicStatus();
             updateRealTimeClock();
-            updateRealTimeDate();
             writeToTerminal("Sistem terminal siap. Menunggu perintah koneksi perangkat...", "success");
             
             setInterval(() => {
                 updateRealTimeClock();
-                updateRealTimeDate();
             }, 1000);
         });
     </script>
