@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Landing Page - Ticktock Golden</title>
+    <title>Landing Page - Ticktock Golden (Versi Awal)</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;600&display=swap" rel="stylesheet">
     <style>
         @font-face {
@@ -303,11 +303,10 @@
         let receivedDataBuffer = ""; 
         const btStatusBox = document.getElementById('bt-status-box');
 
-        // Fungsi pemroses data dari Microbit ke Dashboard (Mengganti - C dan - CM secara real-time)
+        // Fungsi Pemecah Data Masuk dari Microbit (Mengisi data - C dan - CM secara real-time)
         function handleMicrobitData(rawData) {
             receivedDataBuffer += rawData;
             
-            // Memisahkan pesan berdasarkan karakter baris baru (\n) yang dikirim Microbit
             while (receivedDataBuffer.includes("\n")) {
                 let lineIdx = receivedDataBuffer.indexOf("\n");
                 let currentLine = receivedDataBuffer.substring(0, lineIdx).trim();
@@ -320,12 +319,12 @@
 
                     if (isNaN(val)) continue;
 
-                    // 1. UPDATE SUHU SECARA REAL-TIME
+                    // 1. UPDATE DISPLAY TEMPERATURE
                     if (key === "suhu") {
                         document.getElementById('main-temperature').innerText = val + " C";
                     }
                     
-                    // 2. UPDATE JARAK ULTRASONIK & STATUS KEDATANGAN BUS
+                    // 2. UPDATE ULTRASONIC & SITUASI STATUS TEXT
                     else if (key === "jarak") {
                         document.getElementById('main-jarak-bus').innerText = val + " CM";
                         
@@ -339,7 +338,7 @@
                         }
                     }
                     
-                    // 3. UPDATE INDIKATOR SAKELAR KIPAS
+                    // 3. UPDATE INDIKATOR STATUS VISUAL KIPAS
                     else if (key === "kipas") {
                         const txtEl = document.getElementById('kipas-text');
                         const emjEl = document.getElementById('kipas-emoji');
@@ -355,7 +354,7 @@
             }
         }
 
-        // --- CONNECT MICROBIT ---
+        // --- CONNECT MICROBIT BUTTON ACTION ---
         document.getElementById('microbit-connect-btn').addEventListener('click', async function() {
             writeToTerminal("Membuka native menu browser... Silakan pilih perangkat Micro:bit Anda.", "info");
             if (!navigator.bluetooth) {
@@ -373,10 +372,8 @@
                 const server = await bluetoothDevice.gatt.connect();
                 const service = await server.getPrimaryService('e95d13b1-251d-470a-a062-fa1922dfa9a8');
                 
-                // Ambil karakteristik TX-RX UART untuk menerima data nirkabel
                 rxCharacteristic = await service.getCharacteristic('e95d9250-251d-470a-a062-fa1922dfa9a8');
                 
-                // Mulai mendengarkan aliran data masuk dari sensor fisik
                 await rxCharacteristic.startNotifications();
                 rxCharacteristic.addEventListener('characteristicvaluechanged', (event) => {
                     let decoder = new TextDecoder('utf-8');
@@ -386,21 +383,21 @@
 
                 btStatusBox.innerText = "BT Online";
                 btStatusBox.className = "indicator-box bt-online";
-                writeToTerminal(`Berhasil terhubung secara aman dengan ${bluetoothDevice.name}! Aliran sensor aktif.`, "success");
+                writeToTerminal(`Berhasil terhubung secara aman dengan ${bluetoothDevice.name}! Aliran data sensor aktif.`, "success");
 
             } catch (error) {
                 writeToTerminal(`Gagal tersambung via Bluetooth: ${error.message}`, "error");
             }
         });
 
-        // --- DISCONNECT MICROBIT ---
+        // --- DISCONNECT BUTTON ACTION ---
         document.getElementById('microbit-disconnect-btn').addEventListener('click', function() {
             if (bluetoothDevice && bluetoothDevice.gatt.connected) {
                 bluetoothDevice.gatt.disconnect();
                 btStatusBox.innerText = "BT Offline";
                 btStatusBox.className = "indicator-box bt-offline";
                 
-                // Kembalikan ke state awal jika terputus
+                // Reset visual data display kembali ke default
                 document.getElementById('main-temperature').innerText = "- C";
                 document.getElementById('main-jarak-bus').innerText = "- CM";
                 document.getElementById('bus-status-text').innerText = "disconnected";
