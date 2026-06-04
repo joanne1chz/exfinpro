@@ -6,7 +6,6 @@
     <title>Landing Page - Ticktock Golden</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;600&display=swap" rel="stylesheet">
     <style>
-        /* Impor font Mobitale Cnd */
         @font-face {
             font-family: 'Mobitale Cnd';
             src: local('Mobitale Cnd'), local('Mobitale-Cnd');
@@ -34,7 +33,7 @@
             position: relative; 
         }
 
-        /* --- FLOATING STATUS INDICATORS (POJOK KANAN ATAS - FIXED) --- */
+        /* --- FLOATING STATUS INDICATORS --- */
         .floating-status-wrapper {
             position: fixed;
             top: 2vw;
@@ -42,7 +41,7 @@
             display: flex;
             flex-direction: column;
             gap: 0.8vw;
-            z-index: 9999; /* Memastikan selalu berada di lapisan paling atas */
+            z-index: 9999;
         }
 
         .indicator-box {
@@ -62,25 +61,10 @@
             transition: all 0.3s ease;
         }
 
-        /* State Offline (Default) */
-        .indicator-box.bt-offline {
-            background-color: #564E4D; /* Abu-abu gelap */
-            box-shadow: 0px 4px 0px #2D2726;
-        }
-        .indicator-box.db-offline {
-            background-color: #EFA83E; /* Oranye/Kuning Gelap */
-            box-shadow: 0px 4px 0px #A06716;
-        }
-
-        /* State Online (Aktif) */
-        .indicator-box.bt-online {
-            background-color: #2ECC71; /* Hijau Sukses */
-            box-shadow: 0px 4px 0px #1E8449;
-        }
-        .indicator-box.db-online {
-            background-color: #3498DB; /* Biru Sukses */
-            box-shadow: 0px 4px 0px #21618C;
-        }
+        .indicator-box.bt-offline { background-color: #564E4D; box-shadow: 0px 4px 0px #2D2726; }
+        .indicator-box.db-offline { background-color: #EFA83E; box-shadow: 0px 4px 0px #A06716; }
+        .indicator-box.bt-online { background-color: #2ECC71; box-shadow: 0px 4px 0px #1E8449; }
+        .indicator-box.db-online { background-color: #3498DB; box-shadow: 0px 4px 0px #21618C; }
 
         /* --- WRAPPER MAIN MENU --- */
         .main-menu-wrapper {
@@ -98,7 +82,6 @@
             display: block;
         }
 
-        /* --- CONTAINER STATUS KIPAS (Kotak Biru) --- */
         .status-container {
             position: absolute;
             top: 46.5%; 
@@ -120,14 +103,10 @@
             -webkit-text-fill-color: transparent;
             filter: 
                 drop-shadow(0px 4px 0px #0269B9)
-                drop-shadow(2px 2px 0px #fff) 
-                drop-shadow(-2px -2px 0px #fff) 
-                drop-shadow(2px -2px 0px #fff) 
-                drop-shadow(-2px 2px 0px #fff)
-                drop-shadow(2px 0px 0px #fff)
-                drop-shadow(-2px 0px 0px #fff)
-                drop-shadow(0px 2px 0px #fff)
-                drop-shadow(0px -2px 0px #fff);
+                drop-shadow(2px 2px 0px #fff) drop-shadow(-2px -2px 0px #fff) 
+                drop-shadow(2px -2px 0px #fff) drop-shadow(-2px 2px 0px #fff)
+                drop-shadow(2px 0px 0px #fff) drop-shadow(-2px 0px 0px #fff)
+                drop-shadow(0px 2px 0px #fff) drop-shadow(0px -2px 0px #fff);
         }
 
         .status-emoji {
@@ -136,7 +115,6 @@
             filter: drop-shadow(0px 3px 0px #0269B9);
         }
 
-        /* --- INDIKATOR JARAK (Kotak Oren Kiri) --- */
         .bus-distance {
             position: absolute;
             top: 65%; 
@@ -149,17 +127,10 @@
             white-space: nowrap;
             filter: 
                 drop-shadow(0px 4px 0px #000000)
-                drop-shadow(2px 2px 0px #fff) 
-                drop-shadow(-2px -2px 0px #fff) 
-                drop-shadow(2px -2px 0px #fff) 
-                drop-shadow(-2px 2px 0px #fff)
-                drop-shadow(2px 0px 0px #fff)
-                drop-shadow(-2px 0px 0px #fff)
-                drop-shadow(0px 2px 0px #fff)
-                drop-shadow(0px -2px 0px #fff);
+                drop-shadow(2px 2px 0px #fff) drop-shadow(-2px -2px 0px #fff) 
+                drop-shadow(2px -2px 0px #fff) drop-shadow(-2px 2px 0px #fff);
         }
 
-        /* --- STATUS KONEKSI (Kapsul Hitam Kanan) --- */
         .bus-status {
             position: absolute;
             top: 69%; 
@@ -171,14 +142,9 @@
             color: #EAE0CD;
             text-transform: lowercase; 
             white-space: nowrap;
-            filter: 
-                drop-shadow(1px 1px 0px #493A31)
-                drop-shadow(-1px -1px 0px #493A31)
-                drop-shadow(1px -1px 0px #493A31)
-                drop-shadow(-1px 1px 0px #493A31);
+            filter: drop-shadow(1px 1px 0px #493A31) drop-shadow(-1px -1px 0px #493A31);
         }
 
-        /* --- JAM REAL-TIME WIB (Kotak Putih Pertama) --- */
         .realtime-clock {
             position: absolute;
             top: 86.5%; 
@@ -190,19 +156,9 @@
             font-weight: bold;
             color: #000000; 
             white-space: nowrap;
-            filter: 
-                drop-shadow(0px 4px 0px #000000)
-                drop-shadow(2px 2px 0px #fff) 
-                drop-shadow(-2px -2px 0px #fff) 
-                drop-shadow(2px -2px 0px #fff) 
-                drop-shadow(-2px 2px 0px #fff)
-                drop-shadow(2px 0px 0px #fff)
-                drop-shadow(-2px 0px 0px #fff)
-                drop-shadow(0px 2px 0px #fff)
-                drop-shadow(0px -2px 0px #fff);
+            filter: drop-shadow(0px 4px 0px #000000) drop-shadow(2px 2px 0px #fff);
         }
 
-        /* --- SUHU CELCIUS DHT (Kotak Putih Kedua) --- */
         .temperature-display {
             position: absolute;
             top: 86.5%; 
@@ -214,19 +170,9 @@
             font-weight: bold;
             color: #000000; 
             white-space: nowrap;
-            filter: 
-                drop-shadow(0px 4px 0px #000000)
-                drop-shadow(2px 2px 0px #fff) 
-                drop-shadow(-2px -2px 0px #fff) 
-                drop-shadow(2px -2px 0px #fff) 
-                drop-shadow(-2px 2px 0px #fff)
-                drop-shadow(2px 0px 0px #fff)
-                drop-shadow(-2px 0px 0px #fff)
-                drop-shadow(0px 2px 0px #fff)
-                drop-shadow(0px -2px 0px #fff);
+            filter: drop-shadow(0px 4px 0px #000000) drop-shadow(2px 2px 0px #fff);
         }
 
-        /* --- HARI & TANGGAL (Kotak Putih Ketiga) --- */
         .date-display {
             position: absolute;
             top: 86.5%; 
@@ -240,207 +186,53 @@
             white-space: nowrap;
             text-align: center;
             line-height: 1.1; 
-            text-shadow: 
-                -1.5px -1.5px 0 #fff,  
-                 1.5px -1.5px 0 #fff,
-                -1.5px  1.5px 0 #fff,
-                 1.5px  1.5px 0 #fff,
-                 0px 3px 0px #000000;
+            text-shadow: -1.5px -1.5px 0 #fff, 1.5px -1.5px 0 #fff, 0px 3px 0px #000000;
         }
 
         /* --- FIREBASE MENU --- */
-        .firebase-menu-wrapper {
-            position: absolute;
-            top: 68vw; 
-            left: 6vw; 
-            width: 38vw; 
-            height: auto;
-            z-index: 10;
-        }
-
-        .firebase-menu-img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
+        .firebase-menu-wrapper { position: absolute; top: 68vw; left: 6vw; width: 38vw; height: auto; z-index: 10; }
+        .firebase-menu-img { width: 100%; height: auto; display: block; }
         .firebase-input {
-            position: absolute;
-            width: 31vw; 
-            height: 3vw; 
-            background: transparent; 
-            border: none;
-            outline: none;
-            color: #ffffff;
-            font-family: 'Inter', sans-serif;
-            font-size: 1.5vw;
-            font-weight: 600;
-            padding-left: 0.5vw; 
-            transform: rotate(-1deg); 
+            position: absolute; width: 31vw; height: 3vw; background: transparent; border: none; outline: none;
+            color: #ffffff; font-family: 'Inter', sans-serif; font-size: 1.5vw; font-weight: 600; padding-left: 0.5vw; transform: rotate(-1deg); 
         }
-
-        .firebase-input::placeholder {
-            color: rgba(255, 255, 255, 0.6); 
-        }
-
-        #api-key-input {
-            top: 21.0%; 
-            left: 4.5vw;
-        }
-
-        #db-url-input {
-            top: 43.5%; 
-            left: 4.5vw;
-        }
-
-        #node-path-input {
-            top: 66.5%; 
-            left: 4.5vw;
-        }
-
+        #api-key-input { top: 21.0%; left: 4.5vw; }
+        #db-url-input { top: 43.5%; left: 4.5vw; }
+        #node-path-input { top: 66.5%; left: 4.5vw; }
         .firebase-btn {
-            position: absolute;
-            top: 85.5%; 
-            left: 4.5vw;
-            width: 11vw; 
-            height: 3.2vw;
-            background-color: #3FAEA8; 
-            border: 2px solid #ffffff; 
-            border-radius: 0.8vw; 
-            color: #ffffff;
-            font-family: 'Mobitale Cnd', 'Arial Black', sans-serif;
-            font-style: italic;
-            font-size: 1.5vw;
-            font-weight: bold;
-            cursor: pointer;
-            transform: rotate(-1deg); 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
+            position: absolute; top: 85.5%; left: 4.5vw; width: 11vw; height: 3.2vw; background-color: #3FAEA8; 
+            border: 2px solid #ffffff; border-radius: 0.8vw; color: #ffffff; font-family: 'Mobitale Cnd'; font-style: italic;
+            font-size: 1.5vw; font-weight: bold; cursor: pointer; transform: rotate(-1deg); display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;
         }
-
-        .firebase-btn:hover {
-            background-color: #33938E; 
-            transform: rotate(-1deg) scale(1.03);
-        }
+        .firebase-btn:hover { background-color: #33938E; transform: rotate(-1deg) scale(1.03); }
 
         /* --- MICROBIT MENU INTERAKTIF --- */
-        .microbit-menu-wrapper {
-            position: absolute;
-            top: 68vw; 
-            right: 6vw; 
-            width: 38vw; 
-            height: auto;
-            z-index: 10;
-        }
-
-        .microbit-menu-img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
+        .microbit-menu-wrapper { position: absolute; top: 68vw; right: 6vw; width: 38vw; height: auto; z-index: 10; }
+        .microbit-menu-img { width: 100%; height: auto; display: block; }
         .microbit-click-zone {
-            position: absolute;
-            width: 34.5vw;
-            height: 6.8vw;
-            left: 1.8vw;
-            background: rgba(255, 255, 255, 0); 
-            border: none;
-            border-radius: 1.2vw;
-            cursor: pointer;
-            font-family: 'Mobitale Cnd', 'Arial Black', sans-serif;
-            font-style: italic;
-            font-weight: bold;
-            color: #ffffff;
-            font-size: 2.6vw; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-shadow: 
-                -0.18vw -0.18vw 0 #000000,  
-                 0.18vw -0.18vw 0 #000000,
-                -0.18vw  0.18vw 0 #000000,
-                 0.18vw  0.18vw 0 #000000,
-                 0px     0.35vw 0 #000000;
-            transition: all 0.15s ease;
+            position: absolute; width: 34.5vw; height: 6.8vw; left: 1.8vw; background: rgba(255, 255, 255, 0); border: none; border-radius: 1.2vw;
+            cursor: pointer; font-family: 'Mobitale Cnd'; font-style: italic; font-weight: bold; color: #ffffff; font-size: 2.6vw; 
+            display: flex; align-items: center; justify-content: center;
+            text-shadow: -0.18vw -0.18vw 0 #000000, 0.18vw -0.18vw 0 #000000, 0px 0.35vw 0 #000000; transition: all 0.15s ease;
         }
+        .microbit-click-zone:hover { background: rgba(255, 255, 255, 0.12); transform: scale(1.015); }
+        #microbit-connect-btn { top: 19.5%; }
+        #microbit-disconnect-btn { top: 55.5%; }
 
-        .microbit-click-zone:hover {
-            background: rgba(255, 255, 255, 0.12);
-            transform: scale(1.015);
-        }
-
-        .microbit-click-zone:active {
-            background: rgba(0, 0, 0, 0.15);
-            transform: scale(0.985);
-        }
-
-        #microbit-connect-btn {
-            top: 19.5%; 
-        }
-
-        #microbit-disconnect-btn {
-            top: 55.5%; 
-        }
-
-        /* --- SYSTEM TERMINAL INTERAKTIF (KOTAK HITAM) --- */
-        .terminal-wrapper {
-            position: absolute;
-            top: 106vw; 
-            left: 50%;
-            transform: translateX(-50%);
-            width: 88vw; 
-            height: auto;
-            z-index: 10;
-        }
-
-        .terminal-img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
+        /* --- SYSTEM TERMINAL INTERAKTIF --- */
+        .terminal-wrapper { position: absolute; top: 106vw; left: 50%; transform: translateX(-50%); width: 88vw; height: auto; z-index: 10; }
+        .terminal-img { width: 100%; height: auto; display: block; }
         .terminal-log-container {
-            position: absolute;
-            top: 31%;    
-            left: 3.5%;  
-            width: 93%;  
-            height: 63%; 
-            background: transparent;
-            overflow-y: auto; 
-            padding: 0.5vw 1.5vw;
-            display: flex;
-            flex-direction: column;
-            gap: 0.4vw;
-            font-family: 'Inter', sans-serif;
-            color: #ffffff;
-            font-size: 1.2vw; 
-            line-height: 1.4;
-            text-align: left;
+            position: absolute; top: 31%; left: 3.5%; width: 93%; height: 63%; background: transparent; overflow-y: auto; 
+            padding: 0.5vw 1.5vw; display: flex; flex-direction: column; gap: 0.4vw; font-family: 'Inter', sans-serif; color: #ffffff; font-size: 1.2vw; line-height: 1.4;
         }
-
-        .log-line {
-            word-break: break-all;
-            white-space: pre-wrap;
-        }
-        
+        .log-line { word-break: break-all; white-space: pre-wrap; }
         .log-info { color: #ffffff; }
         .log-success { color: #4EFA9E; } 
         .log-error { color: #FF5A5A; }   
         .log-warn { color: #FFD43F; }    
-
-        .terminal-log-container::-webkit-scrollbar {
-            width: 0.5vw;
-        }
-        .terminal-log-container::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .terminal-log-container::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 1vw;
-        }
+        .terminal-log-container::-webkit-scrollbar { width: 0.5vw; }
+        .terminal-log-container::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 1vw; }
     </style>
 </head>
 <body>
@@ -451,41 +243,31 @@
     </div>
 
     <div class="landing-container">
-        
         <div class="main-menu-wrapper">
             <img src="https://github.com/joanne1chz/exfinpro/blob/main/Main.png?raw=true" alt="Main Menu" class="main-menu-img">
             
             <div class="status-container" id="main-status-kipas">
-                <span class="status-text">OFF</span>
-                <span class="status-emoji">🫠</span>
+                <span class="status-text" id="kipas-text">OFF</span>
+                <span class="status-emoji" id="kipas-emoji">🫠</span>
             </div>
 
             <div class="bus-distance" id="main-jarak-bus">- CM</div>
-            
             <div class="bus-status" id="bus-status-text">disconnected</div>
-
             <div class="realtime-clock" id="realtime-clock">00.00</div>
-
             <div class="temperature-display" id="main-temperature">- C</div>
-
-            <div class="date-display" id="realtime-date">
-                Thursday<br>4/6/26
-            </div>
+            <div class="date-display" id="realtime-date">Thursday<br>4/6/26</div>
         </div>
 
         <div class="firebase-menu-wrapper">
             <img src="https://github.com/joanne1chz/exfinpro/blob/main/firebase.png?raw=true" alt="Firebase Menu" class="firebase-menu-img">
-            
             <input type="text" id="api-key-input" class="firebase-input" placeholder="Masukkan API Key...">
             <input type="text" id="db-url-input" class="firebase-input" placeholder="Masukkan URL Database...">
             <input type="text" id="node-path-input" class="firebase-input" placeholder="Masukkan Node Path...">
-            
             <button id="firebase-connect-btn" class="firebase-btn">Connect</button>
         </div>
 
         <div class="microbit-menu-wrapper">
             <img src="https://github.com/joanne1chz/exfinpro/blob/main/microbit.png?raw=true" alt="Microbit Menu" class="microbit-menu-img">
-            
             <button id="microbit-connect-btn" class="microbit-click-zone">Connect Microbit</button>
             <button id="microbit-disconnect-btn" class="microbit-click-zone">Disconnect</button>
         </div>
@@ -497,14 +279,12 @@
     </div>
 
     <script>
-        // --- LOGIKA UTAMA MESIN TERMINAL LOG ---
+        // --- CENTRAL TERMINAL LOG ENGINE ---
         function writeToTerminal(message, type = 'info') {
             const logContainer = document.getElementById('terminal-log-container');
             if (!logContainer) return;
-
             const now = new Date();
             const timeString = now.toTimeString().split(' ')[0];
-
             let tag = '[SYSTEM]';
             if (type === 'success') tag = '[SUCCESS]';
             if (type === 'error') tag = '[ERROR]';
@@ -513,22 +293,73 @@
             const logLine = document.createElement('div');
             logLine.className = `log-line log-${type}`;
             logLine.innerText = `[${timeString}] ${tag} ${message}`;
-
             logContainer.appendChild(logLine);
             logContainer.scrollTop = logContainer.scrollHeight;
         }
 
-
-        // --- LOGIKA KONEKSI MICRO:BIT VIA BLUETOOTH API ---
+        // --- WEB BLUETOOTH DATA PARSER LOGIC ---
         let bluetoothDevice = null;
+        let rxCharacteristic = null;
+        let receivedDataBuffer = ""; 
         const btStatusBox = document.getElementById('bt-status-box');
 
+        // Fungsi pemroses data dari Microbit ke Dashboard (Mengganti - C dan - CM secara real-time)
+        function handleMicrobitData(rawData) {
+            receivedDataBuffer += rawData;
+            
+            // Memisahkan pesan berdasarkan karakter baris baru (\n) yang dikirim Microbit
+            while (receivedDataBuffer.includes("\n")) {
+                let lineIdx = receivedDataBuffer.indexOf("\n");
+                let currentLine = receivedDataBuffer.substring(0, lineIdx).trim();
+                receivedDataBuffer = receivedDataBuffer.substring(lineIdx + 1);
+
+                if (currentLine.includes(":")) {
+                    let parts = currentLine.split(":");
+                    let key = parts[0].trim();
+                    let val = parseInt(parts[1].trim());
+
+                    if (isNaN(val)) continue;
+
+                    // 1. UPDATE SUHU SECARA REAL-TIME
+                    if (key === "suhu") {
+                        document.getElementById('main-temperature').innerText = val + " C";
+                    }
+                    
+                    // 2. UPDATE JARAK ULTRASONIK & STATUS KEDATANGAN BUS
+                    else if (key === "jarak") {
+                        document.getElementById('main-jarak-bus').innerText = val + " CM";
+                        
+                        const statusTextElement = document.getElementById('bus-status-text');
+                        if (val > 0 && val <= 30) {
+                            statusTextElement.innerText = "upcoming";
+                        } else if (val === 0) {
+                            statusTextElement.innerText = "arrived";
+                        } else {
+                            statusTextElement.innerText = "disconnected";
+                        }
+                    }
+                    
+                    // 3. UPDATE INDIKATOR SAKELAR KIPAS
+                    else if (key === "kipas") {
+                        const txtEl = document.getElementById('kipas-text');
+                        const emjEl = document.getElementById('kipas-emoji');
+                        if (val === 1) {
+                            txtEl.innerText = "ON";
+                            emjEl.innerText = "🥶"; 
+                        } else {
+                            txtEl.innerText = "OFF";
+                            emjEl.innerText = "🫠";
+                        }
+                    }
+                }
+            }
+        }
+
+        // --- CONNECT MICROBIT ---
         document.getElementById('microbit-connect-btn').addEventListener('click', async function() {
             writeToTerminal("Membuka native menu browser... Silakan pilih perangkat Micro:bit Anda.", "info");
-            
             if (!navigator.bluetooth) {
                 writeToTerminal("Web Bluetooth API tidak didukung di browser ini. Gunakan Chrome/Edge!", "error");
-                alert("Browser Anda tidak mendukung Web Bluetooth API. Gunakan Google Chrome atau Microsoft Edge!");
                 return;
             }
 
@@ -540,130 +371,83 @@
 
                 writeToTerminal(`Menghubungkan ke device: ${bluetoothDevice.name}...`, "info");
                 const server = await bluetoothDevice.gatt.connect();
+                const service = await server.getPrimaryService('e95d13b1-251d-470a-a062-fa1922dfa9a8');
                 
-                // Ubah Indikator Pojok Kanan Atas menjadi Online
+                // Ambil karakteristik TX-RX UART untuk menerima data nirkabel
+                rxCharacteristic = await service.getCharacteristic('e95d9250-251d-470a-a062-fa1922dfa9a8');
+                
+                // Mulai mendengarkan aliran data masuk dari sensor fisik
+                await rxCharacteristic.startNotifications();
+                rxCharacteristic.addEventListener('characteristicvaluechanged', (event) => {
+                    let decoder = new TextDecoder('utf-8');
+                    let chunk = decoder.decode(event.target.value);
+                    handleMicrobitData(chunk);
+                });
+
                 btStatusBox.innerText = "BT Online";
                 btStatusBox.className = "indicator-box bt-online";
-
-                writeToTerminal(`Berhasil terhubung secara aman dengan ${bluetoothDevice.name}!`, "success");
-                alert("Koneksi Sukses! Web Bluetooth telah terhubung ke BBC micro:bit.");
+                writeToTerminal(`Berhasil terhubung secara aman dengan ${bluetoothDevice.name}! Aliran sensor aktif.`, "success");
 
             } catch (error) {
-                if (error.name === "NotFoundError") {
-                    writeToTerminal("Pemilihan perangkat dibatalkan oleh pengguna.", "warn");
-                } else {
-                    writeToTerminal(`Gagal tersambung via Bluetooth: ${error.message}`, "error");
-                    alert("Gagal menyambungkan Bluetooth: " + error.message);
-                }
+                writeToTerminal(`Gagal tersambung via Bluetooth: ${error.message}`, "error");
             }
         });
 
+        // --- DISCONNECT MICROBIT ---
         document.getElementById('microbit-disconnect-btn').addEventListener('click', function() {
             if (bluetoothDevice && bluetoothDevice.gatt.connected) {
-                writeToTerminal("Memutuskan hubungan komunikasi GATT Server Micro:bit...", "info");
                 bluetoothDevice.gatt.disconnect();
-
-                // Kembalikan Indikator Pojok Kanan Atas menjadi Offline
                 btStatusBox.innerText = "BT Offline";
                 btStatusBox.className = "indicator-box bt-offline";
-
+                
+                // Kembalikan ke state awal jika terputus
+                document.getElementById('main-temperature').innerText = "- C";
+                document.getElementById('main-jarak-bus').innerText = "- CM";
+                document.getElementById('bus-status-text').innerText = "disconnected";
+                
                 writeToTerminal("Perangkat BBC micro:bit berhasil diputus dengan aman.", "success");
-                alert("Koneksi Micro:bit berhasil diputus secara aman.");
-            } else {
-                writeToTerminal("Perintah putus koneksi ditolak: Tidak ada perangkat Micro:bit aktif yang terhubung.", "warn");
-                alert("Tidak ada perangkat Micro:bit aktif yang sedang terhubung saat ini.");
             }
         });
 
-
-        // --- LOGIKA KONEKSI FIREBASE ---
+        // --- FIREBASE SYNC LOGIC ---
         const dbStatusBox = document.getElementById('db-status-box');
-
         document.getElementById('firebase-connect-btn').addEventListener('click', function() {
             const apiKey = document.getElementById('api-key-input').value.trim();
             const dbUrl = document.getElementById('db-url-input').value.trim();
             const nodePath = document.getElementById('node-path-input').value.trim();
 
-            writeToTerminal("Memvalidasi konfigurasi parameter Firebase Cloud...", "info");
-
             if (apiKey === "" || dbUrl === "" || nodePath === "") {
                 writeToTerminal("Sinkronisasi Firebase gagal: Terdapat input field yang kosong!", "error");
-                alert("Gagal Terhubung! Harap isi semua kolom API Key, Database URL, dan Node Path terlebih dahulu.");
                 return;
             }
-
-            if (!dbUrl.startsWith("http://") && !dbUrl.startsWith("https://")) {
-                writeToTerminal("Sinkronisasi Firebase gagal: Format URL Database tidak valid.", "error");
-                alert("Format Database URL salah! Harus diawali dengan http:// atau https://");
-                return;
-            }
-
             this.innerText = "Connecting...";
-            writeToTerminal(`Melakukan handshake menuju URL node: ${nodePath}...`, "info");
-            
             setTimeout(() => {
                 this.innerText = "Connected";
-
-                // Ubah Indikator Pojok Kanan Atas menjadi Online
                 dbStatusBox.innerText = "DB Online";
                 dbStatusBox.className = "indicator-box db-online";
-
-                writeToTerminal("Firebase Cloud Sync Berhasil Terhubung! Aliran data siap disinkronisasikan.", "success");
-                alert("Berhasil terhubung ke Firebase Cloud Sync! Data sekarang siap disinkronkan.");
-            }, 1500);
+                writeToTerminal("Firebase Cloud Sync Berhasil Terhubung!", "success");
+            }, 1000);
         });
 
-        // --- LOGIKA OTOMATIS RUNNING CLOCK & STATUS ---
-        function updateUltrasonicStatus() {
-            const distanceElement = document.getElementById('main-jarak-bus');
-            const statusElement = document.getElementById('bus-status-text');
-            
-            if (!distanceElement || !statusElement) return;
-
-            let rawText = distanceElement.innerText.trim().toUpperCase();
-            if (rawText === "" || rawText === "- CM" || rawText.includes("-")) {
-                statusElement.innerText = "disconnected";
-                return;
-            }
-
-            let distanceValue = parseInt(rawText.replace(/[^0-9]/g, ''));
-            if (isNaN(distanceValue)) {
-                statusElement.innerText = "disconnected";
-            } else if (distanceValue === 0) {
-                statusElement.innerText = "arrived";
-            } else if (distanceValue > 0) {
-                statusElement.innerText = "upcoming";
-            }
-        }
-
+        // --- CLOCK INDONESIA WEST TIME (WIB) ---
         function updateRealTimeClock() {
             const clockElement = document.getElementById('realtime-clock');
             if (!clockElement) return;
-
             const now = new Date();
             const formatter = new Intl.DateTimeFormat('en-US', {
-                timeZone: 'Asia/Jakarta',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false
+                timeZone: 'Asia/Jakarta', hour: '2-digit', minute: '2-digit', hour12: false
             });
-            
             const parts = formatter.formatToParts(now);
             const hour = parts.find(p => p.type === 'hour').value;
             const minute = parts.find(p => p.type === 'minute').value;
             clockElement.innerText = `${hour}.${minute}`;
         }
 
-        // Booting pertama kali saat halaman selesai dimuat
         window.addEventListener('DOMContentLoaded', () => {
             writeToTerminal("Menginisialisasi modul Core Dashboard System...", "info");
-            updateUltrasonicStatus();
             updateRealTimeClock();
+            setInterval(updateRealTimeClock, 1000);
             writeToTerminal("Sistem terminal siap. Menunggu perintah koneksi perangkat...", "success");
-            
-            setInterval(() => {
-                updateRealTimeClock();
-            }, 1000);
         });
     </script>
 </body>
