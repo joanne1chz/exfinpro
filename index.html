@@ -191,31 +191,26 @@
         .date-display {
             position: absolute;
             top: 86.5%; 
-            left: 82%; /* Diperkirakan di tengah kotak putih ketiga */
+            left: 82%; 
             transform: translate(-50%, -50%);
             
             font-family: 'Mobitale Cnd', 'Arial Black', sans-serif;
             font-style: italic; 
-            font-size: 2.8vw; /* Font lebih kecil supaya muat atas-bawah */
+            font-size: 2.8vw; 
             font-weight: bold;
             color: #000000; 
             white-space: nowrap;
             text-align: center;
-            line-height: 1.1; /* Mengatur jarak antar baris supaya rapat/grup */
+            line-height: 1.1; 
 
-            /* Efek shadow sama persis */
-            filter: 
-                drop-shadow(0px 4px 0px #000000)
-                drop-shadow(2px 2px 0px #fff) 
-                drop-shadow(-2px -2px 0px #fff) 
-                drop-shadow(2px -2px 0px #fff) 
-                drop-shadow(-2px 2px 0px #fff)
-                drop-shadow(2px 0px 0px #fff)
-                drop-shadow(-2px 0px 0px #fff)
-                drop-shadow(0px 2px 0px #fff)
-                drop-shadow(0px -2px 0px #fff);
+            /* PERBAIKAN: Menggunakan text-shadow agar teks rapi dan tidak hancur */
+            text-shadow: 
+                -1.5px -1.5px 0 #fff,  
+                 1.5px -1.5px 0 #fff,
+                -1.5px  1.5px 0 #fff,
+                 1.5px  1.5px 0 #fff,
+                 0px 3px 0px #000000;
         }
-
 
         /* --- ASSET LAIN --- */
         .firebase-menu {
