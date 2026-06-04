@@ -200,7 +200,7 @@
                  0px 3px 0px #000000;
         }
 
-        /* --- FIREBASE MENU (Update Jadi Form Input) --- */
+        /* --- FIREBASE MENU (Update Posisi dan Jarak) --- */
         .firebase-menu-wrapper {
             position: absolute;
             top: 68vw; 
@@ -218,37 +218,38 @@
 
         .firebase-input {
             position: absolute;
-            width: 32vw; 
-            height: 4vw; 
+            width: 33.5vw; 
+            height: 3vw; 
             background: transparent; 
             border: none;
             outline: none;
-            color: #ffffff; /* Warna teks putih supaya kontras dengan hijau tosca */
+            color: #ffffff;
             font-family: 'Inter', sans-serif;
             font-size: 1.5vw;
             font-weight: 600;
-            transform: rotate(-2deg); /* Kotak di desain aslinya sedikit miring ke atas */
+            padding-left: 1.5vw; /* Biar ngetiknya gak mepet pinggir banget */
+            transform: rotate(-1deg); /* Dibuat miringnya sedikit saja */
         }
 
         /* Placeholder style supaya transparan */
         .firebase-input::placeholder {
-            color: rgba(255, 255, 255, 0.5); 
+            color: rgba(255, 255, 255, 0.6); 
         }
 
-        /* Posisi masing-masing input menyesuaikan tinggi gambar */
+        /* Posisi ditarik ke atas dan gap diatur rapat (menyesuaikan kotak biru muda) */
         #api-key-input {
-            top: 25%;
-            left: 3.5vw;
+            top: 22%;
+            left: 2vw;
         }
 
         #db-url-input {
-            top: 52%;
-            left: 3.5vw;
+            top: 48%;
+            left: 2vw;
         }
 
         #node-path-input {
-            top: 80%;
-            left: 3.5vw;
+            top: 74%;
+            left: 2vw;
         }
 
         /* --- ASSET LAIN --- */
@@ -379,7 +380,6 @@
             updateRealTimeClock();
             updateRealTimeDate();
             
-            // Update jam dan tanggal setiap detik
             setInterval(() => {
                 updateRealTimeClock();
                 updateRealTimeDate();
