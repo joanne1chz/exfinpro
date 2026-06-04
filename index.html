@@ -88,20 +88,17 @@
             filter: drop-shadow(0px 3px 0px #0269B9);
         }
 
-
         /* --- INDIKATOR JARAK (Kotak Oren Kiri) --- */
         .bus-distance {
             position: absolute;
             top: 65%; 
             left: 62%;
             transform: translate(-50%, -50%);
-            
             font-family: 'Mobitale Cnd', 'Arial Black', sans-serif;
             font-size: 4.5vw; 
             font-weight: bold;
             color: #000000; 
             white-space: nowrap;
-
             filter: 
                 drop-shadow(0px 4px 0px #000000)
                 drop-shadow(2px 2px 0px #fff) 
@@ -120,14 +117,12 @@
             top: 69%; 
             left: 83%; 
             transform: translate(-50%, -50%);
-            
             font-family: 'Inter', sans-serif;
             font-weight: 600; 
             font-size: 1.5vw; 
             color: #EAE0CD;
             text-transform: lowercase; 
             white-space: nowrap;
-            
             filter: 
                 drop-shadow(1px 1px 0px #493A31)
                 drop-shadow(-1px -1px 0px #493A31)
@@ -141,14 +136,12 @@
             top: 86.5%; 
             left: 28.2%;
             transform: translate(-50%, -50%);
-            
             font-family: 'Mobitale Cnd', 'Arial Black', sans-serif;
             font-style: italic; 
             font-size: 4.5vw; 
             font-weight: bold;
             color: #000000; 
             white-space: nowrap;
-
             filter: 
                 drop-shadow(0px 4px 0px #000000)
                 drop-shadow(2px 2px 0px #fff) 
@@ -167,14 +160,12 @@
             top: 86.5%; 
             left: 55%; 
             transform: translate(-50%, -50%);
-            
             font-family: 'Mobitale Cnd', 'Arial Black', sans-serif;
             font-style: italic; 
             font-size: 4.5vw; 
             font-weight: bold;
             color: #000000; 
             white-space: nowrap;
-
             filter: 
                 drop-shadow(0px 4px 0px #000000)
                 drop-shadow(2px 2px 0px #fff) 
@@ -193,7 +184,6 @@
             top: 86.5%; 
             left: 82%; 
             transform: translate(-50%, -50%);
-            
             font-family: 'Mobitale Cnd', 'Arial Black', sans-serif;
             font-style: italic; 
             font-size: 2.8vw; 
@@ -202,8 +192,6 @@
             white-space: nowrap;
             text-align: center;
             line-height: 1.1; 
-
-            /* PERBAIKAN: Menggunakan text-shadow agar teks rapi dan tidak hancur */
             text-shadow: 
                 -1.5px -1.5px 0 #fff,  
                  1.5px -1.5px 0 #fff,
@@ -212,8 +200,8 @@
                  0px 3px 0px #000000;
         }
 
-        /* --- ASSET LAIN --- */
-        .firebase-menu {
+        /* --- FIREBASE MENU (Update Jadi Form Input) --- */
+        .firebase-menu-wrapper {
             position: absolute;
             top: 68vw; 
             left: 6vw; 
@@ -222,6 +210,48 @@
             z-index: 10;
         }
 
+        .firebase-menu-img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .firebase-input {
+            position: absolute;
+            width: 32vw; 
+            height: 4vw; 
+            background: transparent; 
+            border: none;
+            outline: none;
+            color: #ffffff; /* Warna teks putih supaya kontras dengan hijau tosca */
+            font-family: 'Inter', sans-serif;
+            font-size: 1.5vw;
+            font-weight: 600;
+            transform: rotate(-2deg); /* Kotak di desain aslinya sedikit miring ke atas */
+        }
+
+        /* Placeholder style supaya transparan */
+        .firebase-input::placeholder {
+            color: rgba(255, 255, 255, 0.5); 
+        }
+
+        /* Posisi masing-masing input menyesuaikan tinggi gambar */
+        #api-key-input {
+            top: 25%;
+            left: 3.5vw;
+        }
+
+        #db-url-input {
+            top: 52%;
+            left: 3.5vw;
+        }
+
+        #node-path-input {
+            top: 80%;
+            left: 3.5vw;
+        }
+
+        /* --- ASSET LAIN --- */
         .microbit-menu {
             position: absolute;
             top: 68vw; 
@@ -267,7 +297,13 @@
             </div>
         </div>
 
-        <img src="https://github.com/joanne1chz/exfinpro/blob/main/firebase.png?raw=true" alt="Firebase Menu" class="firebase-menu">
+        <div class="firebase-menu-wrapper">
+            <img src="https://github.com/joanne1chz/exfinpro/blob/main/firebase.png?raw=true" alt="Firebase Menu" class="firebase-menu-img">
+            
+            <input type="text" id="api-key-input" class="firebase-input" placeholder="Masukkan API Key...">
+            <input type="text" id="db-url-input" class="firebase-input" placeholder="Masukkan URL Database...">
+            <input type="text" id="node-path-input" class="firebase-input" placeholder="Masukkan Node Path...">
+        </div>
 
         <img src="https://github.com/joanne1chz/exfinpro/blob/main/microbit.png?raw=true" alt="Microbit Menu" class="microbit-menu">
 
@@ -321,23 +357,20 @@
             clockElement.innerText = `${hour}.${minute}`;
         }
 
-        // Logika tanggal real-time (Hari dan DD/MM/YY)
+        // Logika tanggal real-time
         function updateRealTimeDate() {
             const dateElement = document.getElementById('realtime-date');
             if (!dateElement) return;
 
             const now = new Date();
             
-            // Mengambil nama hari
             const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
             const dayName = days[now.getDay()];
 
-            // Format tanggal DD/MM/YY
             const day = now.getDate();
-            const month = now.getMonth() + 1; // getMonth dimulai dari 0
-            const year = now.getFullYear().toString().slice(-2); // Ambil 2 digit terakhir tahun
+            const month = now.getMonth() + 1;
+            const year = now.getFullYear().toString().slice(-2);
 
-            // Masukkan pakai <br> supaya jadi 2 baris
             dateElement.innerHTML = `${dayName}<br>${day}/${month}/${year}`;
         }
 
