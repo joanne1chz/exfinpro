@@ -218,7 +218,7 @@
 
         .firebase-input {
             position: absolute;
-            width: 32vw; /* Sedikit dikecilkan agar digeser ke kanan tidak melebihi kotak */
+            width: 31vw; /* Lebar dikurangi sedikit kompensasi pergeseran ke kanan */
             height: 3vw; 
             background: transparent; 
             border: none;
@@ -235,20 +235,20 @@
             color: rgba(255, 255, 255, 0.6); 
         }
 
-        /* UPDATE POSISI: Ditarik ke atas (top diperkecil) dan digeser kanan (left diperbesar) */
+        /* UPDATE POSISI: Semuanya digeser kanan (left: 4.5vw), API diturunkan, Node Path dinaikkan */
         #api-key-input {
-            top: 18.5%;
-            left: 3.5vw;
+            top: 19.5%;
+            left: 4.5vw;
         }
 
         #db-url-input {
             top: 44.5%;
-            left: 3.5vw;
+            left: 4.5vw;
         }
 
         #node-path-input {
-            top: 70.5%;
-            left: 3.5vw;
+            top: 69.5%;
+            left: 4.5vw;
         }
 
         /* --- ASSET LAIN --- */
