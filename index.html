@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Landing Page - Ticktock Golden</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=600&display=swap" rel="stylesheet">
     <style>
         /* Impor font Mobitale Cnd */
         @font-face {
@@ -297,51 +297,55 @@
             display: block;
         }
 
-        /* Tombol Transparan Presisi Mengikuti Gambar Desain */
+        /* Tombol dengan Text Custom Ber-Outline */
         .microbit-click-zone {
             position: absolute;
             width: 34.5vw;
             height: 6.8vw;
             left: 1.8vw;
-            background: rgba(255, 255, 255, 0); /* Transparan penuh agar gambar asli terlihat */
+            background: rgba(255, 255, 255, 0); 
             border: none;
-            border-radius: 1vw;
+            border-radius: 1.2vw;
             cursor: pointer;
-            transition: background 0.2s ease;
+            
+            /* Aturan Styling Font sesuai Request */
+            font-family: 'Mobitale Cnd', 'Arial Black', sans-serif;
+            font-style: italic;
+            font-weight: bold;
+            color: #ffffff;
+            font-size: 2.6vw; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            /* Efek Outline Hitam Tebal & Bayangan Presisi menggunakan skala vw */
+            text-shadow: 
+                -0.18vw -0.18vw 0 #000000,  
+                 0.18vw -0.18vw 0 #000000,
+                -0.18vw  0.18vw 0 #000000,
+                 0.18vw  0.18vw 0 #000000,
+                 0px     0.35vw 0 #000000;
+                 
+            transition: all 0.15s ease;
         }
 
-        /* Efek feedback visual halus saat diarahkan kursor & diklik */
+        /* Efek hover visual halus saat diarahkan kursor & diklik */
         .microbit-click-zone:hover {
-            background: rgba(255, 255, 255, 0.12); 
+            background: rgba(255, 255, 255, 0.12);
+            transform: scale(1.015);
         }
 
         .microbit-click-zone:active {
             background: rgba(0, 0, 0, 0.15);
+            transform: scale(0.985);
         }
 
         #microbit-connect-btn {
-            top: 19.5%; /* Pas di atas area 'Connect Microbit' */
+            top: 19.5%; /* Pas di atas area box 'Connect Microbit' */
         }
 
         #microbit-disconnect-btn {
-            top: 55.5%; /* Pas di atas area 'Disconnect' */
-        }
-
-        /* Text Keterangan Status Pendukung */
-        .microbit-status-badge {
-            position: absolute;
-            top: 3.5%;
-            right: 4.5%;
-            font-family: 'Inter', sans-serif;
-            font-size: 1.1vw;
-            font-weight: 600;
-            color: #FFB3B3; /* Default merah soft pas terputus */
-            background: rgba(0, 0, 0, 0.45);
-            padding: 0.2vw 0.8vw;
-            border-radius: 0.4vw;
-            text-transform: uppercase;
-            letter-spacing: 0.05vw;
-            pointer-events: none; /* Klik tembus ke bawah */
+            top: 55.5%; /* Pas di atas area box 'Disconnect' */
         }
 
         /* --- TERMINAL ASSET --- */
@@ -394,52 +398,35 @@
         <div class="microbit-menu-wrapper">
             <img src="https://github.com/joanne1chz/exfinpro/blob/main/microbit.png?raw=true" alt="Microbit Menu" class="microbit-menu-img">
             
-            <div id="microbit-status" class="microbit-status-badge">OFFLINE</div>
-
-            <button id="microbit-connect-btn" class="microbit-click-zone" title="Connect Micro:bit via Bluetooth"></button>
-            <button id="microbit-disconnect-btn" class="microbit-click-zone" title="Disconnect Micro:bit"></button>
+            <button id="microbit-connect-btn" class="microbit-click-zone">Connect Microbit</button>
+            <button id="microbit-disconnect-btn" class="microbit-click-zone">Disconnect</button>
         </div>
 
         <img src="https://github.com/joanne1chz/exfinpro/blob/main/system%20terminal.png?raw=true" alt="System Terminal" class="terminal-menu">
     </div>
 
     <script>
-        // --- LOGIKA KONEKSI MICRO:BIT VIA BLUETOOTH ---
+        // --- LOGIKA KONEKSI MICRO:BIT VIA BLUETOOTH API ---
         let bluetoothDevice = null;
 
         document.getElementById('microbit-connect-btn').addEventListener('click', async function() {
-            const statusBadge = document.getElementById('microbit-status');
-            
-            // Cek apakah browser mendukung Web Bluetooth
             if (!navigator.bluetooth) {
-                alert("Browser Anda tidak mendukung Web Bluetooth API. Gunakan Chrome, Edge, atau Opera!");
+                alert("Browser Anda tidak mendukung Web Bluetooth API. Gunakan Google Chrome atau Microsoft Edge!");
                 return;
             }
 
             try {
-                statusBadge.innerText = "PAIRING...";
-                statusBadge.style.color = "#FFE699"; // Kuning tanda memproses
-
-                // Request device Bluetooth Micro:bit secara real-time
+                // Memicu native menu pop-up browser bawaan untuk memilih device Bluetooth Micro:bit
                 bluetoothDevice = await navigator.bluetooth.requestDevice({
                     filters: [{ namePrefix: 'BBC micro:bit' }],
-                    optionalServices: ['e95d13b1-251d-470a-a062-fa1922dfa9a8'] // UUID Layanan default m:b
+                    optionalServices: ['e95d13b1-251d-470a-a062-fa1922dfa9a8'] // UUID Default Service Microbit
                 });
 
-                statusBadge.innerText = "CONNECTING...";
                 const server = await bluetoothDevice.gatt.connect();
-
-                // Berhasil terhubung!
-                statusBadge.innerText = "ONLINE";
-                statusBadge.style.color = "#A3FFB4"; // Hijau terang sukses
                 alert("Koneksi Sukses! Web Bluetooth telah terhubung ke BBC micro:bit.");
 
             } catch (error) {
                 console.log("Koneksi Bluetooth Dibatalkan/Gagal:", error);
-                statusBadge.innerText = "OFFLINE";
-                statusBadge.style.color = "#FFB3B3";
-                
-                // Alert jika user menekan tombol cancel pada pop-up window pairing
                 if (error.name !== "NotFoundError") {
                     alert("Gagal menyambungkan Bluetooth: " + error.message);
                 }
@@ -447,17 +434,12 @@
         });
 
         document.getElementById('microbit-disconnect-btn').addEventListener('click', function() {
-            const statusBadge = document.getElementById('microbit-status');
-
             if (bluetoothDevice && bluetoothDevice.gatt.connected) {
                 bluetoothDevice.gatt.disconnect();
                 alert("Koneksi Micro:bit berhasil diputus secara aman.");
             } else {
-                alert("Tidak ada perangkat Micro:bit aktif yang sedang terhubung.");
+                alert("Tidak ada perangkat Micro:bit aktif yang sedang terhubung saat ini.");
             }
-
-            statusBadge.innerText = "OFFLINE";
-            statusBadge.style.color = "#FFB3B3";
         });
 
 
@@ -485,7 +467,7 @@
             }, 1500);
         });
 
-        // --- LOGIKA OTOMATIS RUNNING ---
+        // --- LOGIKA OTOMATIS RUNNING CLOCK & STATUS ---
         function updateUltrasonicStatus() {
             const distanceElement = document.getElementById('main-jarak-bus');
             const statusElement = document.getElementById('bus-status-text');
