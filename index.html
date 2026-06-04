@@ -34,6 +34,54 @@
             position: relative; 
         }
 
+        /* --- FLOATING STATUS INDICATORS (POJOK KANAN ATAS - FIXED) --- */
+        .floating-status-wrapper {
+            position: fixed;
+            top: 2vw;
+            right: 2vw;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8vw;
+            z-index: 9999; /* Memastikan selalu berada di lapisan paling atas */
+        }
+
+        .indicator-box {
+            width: 11vw;
+            height: 3vw;
+            border-radius: 0.8vw;
+            border: 2px solid #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Mobitale Cnd', 'Arial Black', sans-serif;
+            font-style: italic;
+            font-weight: bold;
+            font-size: 1.3vw;
+            color: #ffffff;
+            text-transform: capitalize;
+            transition: all 0.3s ease;
+        }
+
+        /* State Offline (Default) */
+        .indicator-box.bt-offline {
+            background-color: #564E4D; /* Abu-abu gelap */
+            box-shadow: 0px 4px 0px #2D2726;
+        }
+        .indicator-box.db-offline {
+            background-color: #EFA83E; /* Oranye/Kuning Gelap */
+            box-shadow: 0px 4px 0px #A06716;
+        }
+
+        /* State Online (Aktif) */
+        .indicator-box.bt-online {
+            background-color: #2ECC71; /* Hijau Sukses */
+            box-shadow: 0px 4px 0px #1E8449;
+        }
+        .indicator-box.db-online {
+            background-color: #3498DB; /* Biru Sukses */
+            box-shadow: 0px 4px 0px #21618C;
+        }
+
         /* --- WRAPPER MAIN MENU --- */
         .main-menu-wrapper {
             position: absolute;
@@ -354,40 +402,35 @@
             display: block;
         }
 
-        /* Kontainer teks log di dalam area kotak hitam terminal */
         .terminal-log-container {
             position: absolute;
-            top: 31%;    /* Diturunkan dari 22% ke 31% agar tepat masuk ke dalam kotak hitam */
-            left: 3.5%;  /* Mengikuti lekukan padding sisi kiri kotak hitam */
-            width: 93%;  /* Menyesuaikan lebar dalam kotak hitam */
-            height: 63%; /* Disesuaikan dari 72% ke 63% agar batas bawahnya presisi */
+            top: 31%;    
+            left: 3.5%;  
+            width: 93%;  
+            height: 63%; 
             background: transparent;
-            overflow-y: auto; /* Mengaktifkan fungsi scroll ke bawah jika log penuh */
+            overflow-y: auto; 
             padding: 0.5vw 1.5vw;
             display: flex;
             flex-direction: column;
             gap: 0.4vw;
-            
-            /* Aturan Styling Font Sesuai Request */
             font-family: 'Inter', sans-serif;
             color: #ffffff;
-            font-size: 1.2vw; /* Ukuran kecil presisi */
+            font-size: 1.2vw; 
             line-height: 1.4;
             text-align: left;
         }
 
-        /* Desain baris log agar scannable */
         .log-line {
             word-break: break-all;
             white-space: pre-wrap;
         }
         
         .log-info { color: #ffffff; }
-        .log-success { color: #4EFA9E; } /* Hijau neon tipis agar log sukses terlihat jelas */
-        .log-error { color: #FF5A5A; }   /* Merah tipis untuk pemberitahuan error */
-        .log-warn { color: #FFD43F; }    /* Kuning untuk warning */
+        .log-success { color: #4EFA9E; } 
+        .log-error { color: #FF5A5A; }   
+        .log-warn { color: #FFD43F; }    
 
-        /* Kustomisasi scrollbar terminal agar tetap estetik minimalis */
         .terminal-log-container::-webkit-scrollbar {
             width: 0.5vw;
         }
@@ -401,6 +444,11 @@
     </style>
 </head>
 <body>
+
+    <div class="floating-status-wrapper">
+        <div id="bt-status-box" class="indicator-box bt-offline">BT Offline</div>
+        <div id="db-status-box" class="indicator-box db-offline">DB Offline</div>
+    </div>
 
     <div class="landing-container">
         
@@ -455,9 +503,8 @@
             if (!logContainer) return;
 
             const now = new Date();
-            const timeString = now.toTimeString().split(' ')[0]; // Mengambil format HH:MM:SS
+            const timeString = now.toTimeString().split(' ')[0];
 
-            // Format standard log: [HH:MM:SS] [TAG] Message
             let tag = '[SYSTEM]';
             if (type === 'success') tag = '[SUCCESS]';
             if (type === 'error') tag = '[ERROR]';
@@ -468,14 +515,13 @@
             logLine.innerText = `[${timeString}] ${tag} ${message}`;
 
             logContainer.appendChild(logLine);
-            
-            // Auto-scroll otomatis ke baris paling bawah saat log baru masuk
             logContainer.scrollTop = logContainer.scrollHeight;
         }
 
 
         // --- LOGIKA KONEKSI MICRO:BIT VIA BLUETOOTH API ---
         let bluetoothDevice = null;
+        const btStatusBox = document.getElementById('bt-status-box');
 
         document.getElementById('microbit-connect-btn').addEventListener('click', async function() {
             writeToTerminal("Membuka native menu browser... Silakan pilih perangkat Micro:bit Anda.", "info");
@@ -495,6 +541,10 @@
                 writeToTerminal(`Menghubungkan ke device: ${bluetoothDevice.name}...`, "info");
                 const server = await bluetoothDevice.gatt.connect();
                 
+                // Ubah Indikator Pojok Kanan Atas menjadi Online
+                btStatusBox.innerText = "BT Online";
+                btStatusBox.className = "indicator-box bt-online";
+
                 writeToTerminal(`Berhasil terhubung secara aman dengan ${bluetoothDevice.name}!`, "success");
                 alert("Koneksi Sukses! Web Bluetooth telah terhubung ke BBC micro:bit.");
 
@@ -512,6 +562,11 @@
             if (bluetoothDevice && bluetoothDevice.gatt.connected) {
                 writeToTerminal("Memutuskan hubungan komunikasi GATT Server Micro:bit...", "info");
                 bluetoothDevice.gatt.disconnect();
+
+                // Kembalikan Indikator Pojok Kanan Atas menjadi Offline
+                btStatusBox.innerText = "BT Offline";
+                btStatusBox.className = "indicator-box bt-offline";
+
                 writeToTerminal("Perangkat BBC micro:bit berhasil diputus dengan aman.", "success");
                 alert("Koneksi Micro:bit berhasil diputus secara aman.");
             } else {
@@ -522,6 +577,8 @@
 
 
         // --- LOGIKA KONEKSI FIREBASE ---
+        const dbStatusBox = document.getElementById('db-status-box');
+
         document.getElementById('firebase-connect-btn').addEventListener('click', function() {
             const apiKey = document.getElementById('api-key-input').value.trim();
             const dbUrl = document.getElementById('db-url-input').value.trim();
@@ -546,6 +603,11 @@
             
             setTimeout(() => {
                 this.innerText = "Connected";
+
+                // Ubah Indikator Pojok Kanan Atas menjadi Online
+                dbStatusBox.innerText = "DB Online";
+                dbStatusBox.className = "indicator-box db-online";
+
                 writeToTerminal("Firebase Cloud Sync Berhasil Terhubung! Aliran data siap disinkronisasikan.", "success");
                 alert("Berhasil terhubung ke Firebase Cloud Sync! Data sekarang siap disinkronkan.");
             }, 1500);
